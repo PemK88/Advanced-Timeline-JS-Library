@@ -1,8 +1,20 @@
 
+.body {
+    overflow: hidden;
+}
+
 .advanced-timeline {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    overflow: visible;
+    margin-top: 20px;
+}
+
+.wrapper-advanced-timeline {
+    overflow-y: scroll;
+    height: 800px;
     position: relative;
 }
 
@@ -25,18 +37,19 @@
     height: 250px;
     width: 8px;
     background: #283474;
-    transform-origin: center;
-    /* transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease; */
-    transition: transform 1s ease, top 0.8s ease, 1s ease, opacity 0.2s ease;
-    opacity: 1;
+    transform-origin: center top;
+    transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
+    /* transition: transform 1s ease, top 1s ease, 1s ease, opacity 0.2s ease; */
 }
 
 .subdivision-zoom {
-    transform: scale(2, 2.5);
+    transform: scale(2, 2.6);
     /* margin-top: 213px;
     margin-bottom: 213px; */
-    position: absolute;
-    top: 265px;
+    /* position: absolute;
+    top: 265px; */
+    margin-top: 13px;
+    margin-bottom: 412px;
     z-index: 200;
 
 }
@@ -46,16 +59,15 @@
     width: 140px;
     overflow: hidden;
     transform-origin: center;
-    transition: transform 1s ease, top 0.8s ease, opacity 0.2s ease;
-    opacity: 1;
+    transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
 }
 
 .wrapper-point-visible {
     /* height: 0px;
     width: 0px; */
     display: block;
-    transform: scale(2);
-    position: absolute;
+    transform: scale(1.5);
+    /* position: absolute; */
 }
 
 .wrapper-point-visible-next {
@@ -63,8 +75,8 @@
     width: 0px; */
     display: block;
     transform: scale(2);
-    position: absolute;
-    top: 728px;
+    /* position: absolute;
+    top: 728px; */
 }
 
 .no-opacity {
