@@ -260,7 +260,7 @@ function clickListener (event) {
         //$('.subdivision').css({transform: scale(2, 2.5)'margin-top' : '25px', 'margin-bottom': '401px', 'z-index': '200'});
         $(`#${timeline.id} .subdivision`).prop("disabled", false);
         $(`#${timeline.id} .wrapper-point`).prop("disabled", false);
-        $(`#${timeline.id} #${event.target.id}`).css({'height': '250px', 'margin-bottom': '0'});
+        $(`#${timeline.id} #${event.target.id}`).removeAttr("style");
         $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
         // console.log($(`#${prevDiv[0].id}`).position());
         // console.log(document.getElementById(`${prevDiv[0].id}`).offsetTop + " 2");
