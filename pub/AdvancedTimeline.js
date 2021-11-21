@@ -2,6 +2,7 @@
 let timeline;
 let timelineElement;
 let timelineWrapperElement;
+let activeSubDivion;
 
 class Timeline {
     constructor() {
@@ -22,13 +23,15 @@ class Point {
 class SubDivision {
     constructor() {
         this.id = 'sub-division-' + (Object.keys(timeline.subDivisions).length + 1);
-        this.subPoints = [];
+        this.subPoints = {};
+        this.height = '250px';
+        this.marginBottom = '459px';
     }
 }
 
 class SubPoint {
     constructor(subDivisionId) {
-        this.id = 'sub-point-' + (timeline.subDivisions[subDivisionId].subPoints.length === 0) ? 1 : timeline.subDivisions[subDivisionId].subPoints[timeline.subDivisions[subDivisionId].subPoints.length - 1].id + 1;
+        this.id = 'sub-point-' + (Object.keys(timeline.subDivisions[subDivisionId].subPoints).length + 1);
     }
 }
 
@@ -76,6 +79,39 @@ function createPoint() {
     return [point, pointHtml];
 }
 
+function createSubPoint(pointId = null) {
+    let subDivisionId;
+    let active = false;
+
+    if (timeline.points[pointId]) {
+        subDivisionId = $(`#${pointId}`).parent().next()[0].id;
+    }
+    else {
+        subDivisionId = activeSubDivion;
+        active = true;
+    }
+    
+    if (!subDivisionId) return;
+
+    const subPoint = new SubPoint(subDivisionId);
+
+    timeline.subDivisions[subDivisionId].subPoints[subPoint.id] = subPoint
+
+    const numSubPoints = Object.keys(timeline.subDivisions[subDivisionId].subPoints).length
+
+    if ( numSubPoints > 7) {
+        timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-7) * 35);
+        timeline.subDivisions[subDivisionId].marginBottom = 459 + ((numSubPoints-7) * 56);
+    }
+
+    
+    const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'></div></div>`;
+
+    addNewSubPointToTimeline(subPointHtml, subDivisionId, active);
+    // //const pointHtml = `<div id='${point.id}' class='point' contentEditable='true'>${point.title}</div>`;
+    // return [point, pointHtml];
+}
+
 function createSubDivision() {
     const subDivision = new SubDivision();
     const subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'></div>`;
@@ -95,21 +131,34 @@ function addNewPointToTimeline(pointHTML, subDivisionHtml) {
     timelineElement.insertAdjacentHTML('beforeend', subDivisionHtml);
 }
 
+function addNewSubPointToTimeline(subPointHTML, subDivisionId, active) {
+    timelineElement.querySelector(`#${subDivisionId}`).insertAdjacentHTML('beforeend', subPointHTML);
+    if (active) {
+        $(`#${timeline.id} #${subDivisionId}`).css({'height': timeline.subDivisions[`${subDivisionId}`].height,
+            'margin-bottom': timeline.subDivisions[`${subDivisionId}`].marginBottom});
+        $(`#${timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+    }
+}
+
 function zoomDivision(event) {
-    const prevDiv = $(`#${event.target.id}`).prev();
+    activeSubDivion = event.target.id;
+    const prevDiv = $(`#${timeline.id} #${event.target.id}`).prev();
     let eventFired = 0;
     console.log(timelineWrapperElement.scrollTop + " old scroll top")
     const prevScrollTop = timelineWrapperElement.scrollTop;
     //console.log($(`#${prevDiv[0].id}`).position());
-    $('.wrapper-point').toggleClass('wrapper-point-visible', true);
-    $('.wrapper-point').prop("disabled", true);
-    $('.subdivision').toggleClass('subdivision-zoom', true);
-    $(`.subdivision:not(#${event.target.id})`).prop("disabled", true);
-    $(`#${event.target.id}`).prop("disabled", false);
+    $(`#${timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
+    $(`#${timeline.id} .wrapper-point`).prop("disabled", true);
+    $(`#${timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
+    $(`#${timeline.id} .subdivision:not(#${event.target.id})`).prop("disabled", true);
+    $(`#${timeline.id} #${event.target.id}`).prop("disabled", false);
+    $(`#${timeline.id} #${event.target.id}`).css({'height': timeline.subDivisions[`${event.target.id}`].height,
+        'margin-bottom': timeline.subDivisions[`${event.target.id}`].marginBottom});
+    $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
     // console.log(document.getElementById(`${prevDiv[0].id}`).offsetTop + " 1");
     // console.log(document.querySelector(`#${prevDiv[0].id}`).offsetTop);
 
-    $(`#${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
+    $(`#${timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
         () => {
             if(eventFired) {
                 return;
@@ -129,7 +178,7 @@ function zoomDivision(event) {
             console.log('offset ' + offSet)
 
 
-            timelineWrapperElement.scrollTop =  document.querySelector(`#${prevDiv[0].id}`).offsetTop;
+            timelineWrapperElement.scrollTop =  timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
             // timelineWrapperElement.animate({
             //     scrollTop: document.querySelector(`#${prevDiv[0].id}`).offsetTop},
             //     'slow');
@@ -204,12 +253,15 @@ function clickListener (event) {
     }
 
     else if(event.target.className === 'subdivision subdivision-zoom') {
+        activeSubDivion = null;
         const prevDiv = $(`#${event.target.id}`).prev();
-        $('.wrapper-point').toggleClass('wrapper-point-visible', false);
-        $('.subdivision').toggleClass('subdivision-zoom', false);
+        $(`#${timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
+        $(`#${timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
         //$('.subdivision').css({transform: scale(2, 2.5)'margin-top' : '25px', 'margin-bottom': '401px', 'z-index': '200'});
-        $('.subdivision').prop("disabled", false);
-        $('.wrapper-point').prop("disabled", false);
+        $(`#${timeline.id} .subdivision`).prop("disabled", false);
+        $(`#${timeline.id} .wrapper-point`).prop("disabled", false);
+        $(`#${timeline.id} #${event.target.id}`).css({'height': '250px', 'margin-bottom': '0'});
+        $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
         // console.log($(`#${prevDiv[0].id}`).position());
         // console.log(document.getElementById(`${prevDiv[0].id}`).offsetTop + " 2");
         // console.log(document.querySelector(`#${prevDiv[0].id}`).offsetTop);
