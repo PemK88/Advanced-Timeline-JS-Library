@@ -25,7 +25,7 @@ class SubDivision {
         this.id = 'sub-division-' + (Object.keys(timeline.subDivisions).length + 1);
         this.subPoints = {};
         this.height = '250px';
-        this.marginBottom = '533px';
+        this.marginBottom = '519px';
     }
 }
 
@@ -112,7 +112,7 @@ function createSubPoint(pointId = null) {
 
     if ( numSubPoints > 6) {
         timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
-        timeline.subDivisions[subDivisionId].marginBottom = 533 + ((numSubPoints-6) * 72);
+        timeline.subDivisions[subDivisionId].marginBottom = 533 + ((numSubPoints-6) * 58);
     }
 
     
@@ -321,7 +321,7 @@ function clickListener (event) {
         $(`#${timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
     }
 
-    console.log(event.target.id);
+    console.log(event.target.className);
     
 }
 
