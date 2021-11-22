@@ -3,6 +3,7 @@ let timeline;
 let timelineElement;
 let timelineWrapperElement;
 let activeSubDivion;
+let pointEndElement;
 
 class Timeline {
     constructor() {
@@ -53,18 +54,23 @@ document.getElementsByClassName('create-timeline')[0].addEventListener('click', 
 //main func
 function createTimeline () {
     timeline = new Timeline;
-    const [point, pointHTML] = createPoint();
+    const [point, pointHTML] = createPoint('Start');
+    timeline.points[point.id] = point;
+    const [pointEnd, pointEndHTML] = createPoint('End');
+    timeline.points[pointEnd.id] = pointEnd;
     const [subDivision, subDivisionHtml] = createSubDivision();
     timeline.points[point.id] = point;
     timeline.subDivisions[subDivision.id] = subDivision;
 
-    addTimelineToDocument(timeline.id, timeline.wrapperId, pointHTML, subDivisionHtml);
+    addTimelineToDocument(timeline.id, timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
 
     timelineElement = document.querySelector(`#${timeline.id}`);
     timelineElement.addEventListener('change', changeListener);
     timelineElement.addEventListener('click', clickListener);
 
     timelineWrapperElement = document.querySelector(`#${timeline.wrapperId}`);
+    pointEndElement = timelineElement.querySelector('#wrapper-point-2');
+    pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
 }
 
 //main func
@@ -79,8 +85,8 @@ function createNewPoint() {
     addNewPointToTimeline(pointHTML, subDivisionHtml);
 }
 
-function createPoint() {
-    const point = new Point('hi');
+function createPoint(title = 'hi') {
+    const point = new Point(title);
     const pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><input type='text' id='${point.id}' class='point' value='${point.title}' readonly></div>`;
     //const pointHtml = `<div id='${point.id}' class='point' contentEditable='true'>${point.title}</div>`;
     return [point, pointHtml];
@@ -112,7 +118,8 @@ function createSubPoint(pointId = null) {
 
     if ( numSubPoints > 6) {
         timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
-        timeline.subDivisions[subDivisionId].marginBottom = 533 + ((numSubPoints-6) * 58);
+        timeline.subDivisions[subDivisionId].marginBottom = 519 + ((numSubPoints-6) * 72);
+        timelineWrapperElement.style.height = (990 + ((numSubPoints-6) * 118)) + 'px';
     }
 
     
@@ -150,15 +157,17 @@ function createSubDivision() {
 
 //DOM manipulating funcs
 
-function addTimelineToDocument(timelineId, wrapperId, pointHTML, subDivisionHtml) {
+function addTimelineToDocument(timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
     const body = document.querySelector('body');
-    const newTimeline = `<div id='${wrapperId}' class='wrapper-advanced-timeline'><ul id='${timelineId}' class='advanced-timeline'>` + pointHTML + subDivisionHtml + '</ul></div>';
+    const newTimeline = `<div id='${wrapperId}' class='wrapper-advanced-timeline'><ul id='${timelineId}' class='advanced-timeline'>` + pointHTML + subDivisionHtml + pointEndHTML +'</ul></div>';
     body.insertAdjacentHTML('beforeend', newTimeline);
 }
 
 function addNewPointToTimeline(pointHTML, subDivisionHtml) {
-    timelineElement.insertAdjacentHTML('beforeend', pointHTML);
-    timelineElement.insertAdjacentHTML('beforeend', subDivisionHtml);
+    pointEndElement.insertAdjacentHTML('beforebegin', pointHTML);
+    pointEndElement.insertAdjacentHTML('beforebegin', subDivisionHtml);
+    // timelineElement.insertAdjacentHTML('beforeend', pointHTML);
+    // timelineElement.insertAdjacentHTML('beforeend', subDivisionHtml);
 }
 
 function addNewSubPointToTimeline(subPointHTML, subDivisionId, active) {
@@ -173,7 +182,9 @@ function addNewSubPointToTimeline(subPointHTML, subDivisionId, active) {
 function zoomDivision(event) {
     activeSubDivion = event.target.id;
     const prevDiv = $(`#${timeline.id} #${event.target.id}`).prev();
+    const nextDiv = $(`#${timeline.id} #${event.target.id}`).next();
     let eventFired = 0;
+    let newHeight = '800px'
     console.log(timelineWrapperElement.scrollTop + " old scroll top")
     const prevScrollTop = timelineWrapperElement.scrollTop;
     //console.log($(`#${prevDiv[0].id}`).position());
@@ -192,6 +203,9 @@ function zoomDivision(event) {
     $(`#${timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
         () => {
             if(eventFired) {
+                console.log('event fired position' + timelineWrapperElement.scrollTop)
+                timelineWrapperElement.style.overflowY = 'hidden';
+                timelineWrapperElement.style.height = newHeight;
                 return;
             }
             //sconsole.log(document.querySelector(`#${prevDiv[0].id}`).offsetTop + " target position");
@@ -215,6 +229,15 @@ function zoomDivision(event) {
             //     'slow');
             //debugger;
             //timelineWrapperElement.scrollTo(0, document.querySelector(`#${prevDiv[0].id}`).offsetTop);
+            const startPoint = timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
+            const startDiv = timelineElement.querySelector(`#${event.target.id}`).offsetTop;
+            const endDiv = timelineElement.querySelector(`#${nextDiv[0].id}`).offsetTop
+
+            newHeight = (startDiv + endDiv + 33 - 2*startPoint) + 'px';
+
+
+            console.log("new height: " + newHeight);
+
             console.log(timelineWrapperElement.scrollTop + " new scroll top")
             //console.log((prevScrollTop + newScrollTop - offSet) + " proposed scroll top")
             eventFired = 1;
@@ -298,6 +321,7 @@ function clickListener (event) {
         $(`#${timeline.id} #${event.target.id}`).removeAttr("style");
         $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
         $(`#${timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false)
+        timelineWrapperElement.style = '';
         // console.log($(`#${prevDiv[0].id}`).position());
         // console.log(document.getElementById(`${prevDiv[0].id}`).offsetTop + " 2");
         // console.log(document.querySelector(`#${prevDiv[0].id}`).offsetTop);
