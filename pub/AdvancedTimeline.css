@@ -36,9 +36,10 @@
     background: #283474;
     transform-origin: center top;
     transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
-    gap: 20px;
-    padding-top: 20px;
-    padding-bottom: 9px;
+    gap: 30px;
+    padding-top: 30px;
+    padding-bottom: 45px;
+    cursor: pointer;
     /* transition: transform 1s ease, top 1s ease, 1s ease, opacity 0.2s ease; */
 }
 
@@ -49,7 +50,7 @@
     /* position: absolute;
     top: 265px; */
     margin-top: 13px;
-    margin-bottom: 459px;
+    margin-bottom: 533px;
     z-index: 200;
 
 }
@@ -86,6 +87,7 @@
     border-radius: 50%;
     margin-left: -8px;
     border: 2px solid #283574;
+    cursor: pointer;
 }
 
 .wrapper-sub-point {
@@ -95,4 +97,98 @@
 
 .display-flex {
     display: flex;
+}
+/* 
+.sub-info-card-front{
+    margin-left: 60px;
+    height: 70px;
+    width: 200px;
+    border: 2px solid #283574;
+    background-color: #f5f7ff;
+    margin-top: -30px;
+    padding: 5px 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-align: center;
+    transform: scaleY(0.769);
+} */
+
+.sub-info-card {
+    margin-left: 80px;
+    height: 80px;
+    width: 250px;
+    background-color: transparent;
+    margin-top: -30px;
+    font-family: Arial, Helvetica, sans-serif;
+    transform: scaleY(0.769);
+    border-radius: 5px;
+    display: none;
+}
+
+.wrapper-sub-point:nth-of-type(2n) .sub-info-card{
+    margin-left: -304px;
+}
+
+.info-card-front-text {
+    transform: scaleY(0.769);
+    margin: auto;
+    cursor: pointer;
+}
+
+.sub-info-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    background-color: transparent;
+    border-radius: 5px;
+}
+  
+.sub-info-card-front, .sub-info-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.sub-info-card-front {
+    display: flex;
+    border: 2px solid #283574;
+    background-color: #f5f7ff;
+    padding: 5px 10px;
+    font-size: 11px;
+    text-align: center;
+    transition: transform 0.6s;
+}
+
+.sub-info-card-back {
+    display: flex;
+    border: 2px solid #283574;
+    background-color: #9cd13a;
+    padding: 5px 10px;
+    font-size: 11px;
+    text-align: center;
+    transition: transform 0.6s;
+    transform: rotateY(180deg);
+    
+}
+
+.flip-180 {
+    transform: rotateY(180deg);
+}
+
+.flip-0 {
+    transform: rotateY(0deg);
+}
+
+.display {
+    display: block;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
 }

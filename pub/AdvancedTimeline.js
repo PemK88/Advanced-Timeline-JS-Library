@@ -25,13 +25,20 @@ class SubDivision {
         this.id = 'sub-division-' + (Object.keys(timeline.subDivisions).length + 1);
         this.subPoints = {};
         this.height = '250px';
-        this.marginBottom = '459px';
+        this.marginBottom = '533px';
     }
 }
 
 class SubPoint {
     constructor(subDivisionId) {
         this.id = 'sub-point-' + (Object.keys(timeline.subDivisions[subDivisionId].subPoints).length + 1);
+        this.infoCard = null;
+    }
+}
+
+class SubInfoCard {
+    constructor(subPointId) {
+        this.id = 'sub-info-card-' + subPointId;
     }
 }
 
@@ -95,21 +102,44 @@ function createSubPoint(pointId = null) {
 
     const subPoint = new SubPoint(subDivisionId);
 
+    const [infoCard, infoCardHtml] = createSubInfoCard(subPoint.id);
+
+    subPoint.infoCard = infoCard;
+
     timeline.subDivisions[subDivisionId].subPoints[subPoint.id] = subPoint
 
     const numSubPoints = Object.keys(timeline.subDivisions[subDivisionId].subPoints).length
 
-    if ( numSubPoints > 7) {
-        timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-7) * 35);
-        timeline.subDivisions[subDivisionId].marginBottom = 459 + ((numSubPoints-7) * 56);
+    if ( numSubPoints > 6) {
+        timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
+        timeline.subDivisions[subDivisionId].marginBottom = 533 + ((numSubPoints-6) * 72);
     }
 
     
-    const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'></div></div>`;
+    const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${infoCardHtml}</div></div>`;
 
     addNewSubPointToTimeline(subPointHtml, subDivisionId, active);
     // //const pointHtml = `<div id='${point.id}' class='point' contentEditable='true'>${point.title}</div>`;
     // return [point, pointHtml];
+}
+
+function createSubInfoCard(subPointId) {
+
+    const infoCard = new SubInfoCard(subPointId);
+    const infoCardHtml = `<div class='sub-info-card' id='${infoCard.id}'>
+                            <div class='sub-info-card-inner' id='inner-${infoCard.id}'>
+                                <div class='sub-info-card-front' id='front-${infoCard.id}'>
+                                    <h2 class='info-card-front-text'>HI<h2>
+                                </div>
+                                <div class='sub-info-card-back' id='back-${infoCard.id}'>
+                                </div>
+                            </div>
+                        </div>`
+
+    //const infoCardHtml = `<div class='sub-info-card-front' id='${infoCard.id}-front'><h2 class='info-card-front-text'>HI<h2></div>`;
+
+    return [infoCard, infoCardHtml];
+
 }
 
 function createSubDivision() {
@@ -150,7 +180,8 @@ function zoomDivision(event) {
     $(`#${timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
     $(`#${timeline.id} .wrapper-point`).prop("disabled", true);
     $(`#${timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
-    $(`#${timeline.id} .subdivision:not(#${event.target.id})`).prop("disabled", true);
+    $(`#${timeline.id} .subdivision`).prop("disabled", true);
+    $(`#${timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
     $(`#${timeline.id} #${event.target.id}`).prop("disabled", false);
     $(`#${timeline.id} #${event.target.id}`).css({'height': timeline.subDivisions[`${event.target.id}`].height,
         'margin-bottom': timeline.subDivisions[`${event.target.id}`].marginBottom});
@@ -209,6 +240,10 @@ function zoomDivision(event) {
 // scrollyDiv.scrollTop = scrollyDiv.scrollHeight
 
 function clickListener (event) {
+    if(!event.target.id) {
+        return;
+    }
+    
     if ($(`#${event.target.id}`).prop('disabled')) {
         return;
     }
@@ -262,6 +297,7 @@ function clickListener (event) {
         $(`#${timeline.id} .wrapper-point`).prop("disabled", false);
         $(`#${timeline.id} #${event.target.id}`).removeAttr("style");
         $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
+        $(`#${timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false)
         // console.log($(`#${prevDiv[0].id}`).position());
         // console.log(document.getElementById(`${prevDiv[0].id}`).offsetTop + " 2");
         // console.log(document.querySelector(`#${prevDiv[0].id}`).offsetTop);
@@ -273,6 +309,19 @@ function clickListener (event) {
         // $(`.subdivision:not(#${event.target.id})`).css({opacity:'1'});
         // $('.subdivision').prop("disabled", false);
     }
+    else if(event.target.className === 'sub-point') {
+        $(`#${timeline.id} #${event.target.id} .sub-info-card`).toggleClass('display');
+    }
+    else if(event.target.className === 'sub-info-card-front') {
+        $(`#${timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
+        $(`#${timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
+    }
+    else if(event.target.className === 'sub-info-card-back flip-0') {
+        $(`#${timeline.id} #${event.target.id}`).toggleClass('flip-0',false);
+        $(`#${timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
+    }
+
+    console.log(event.target.id);
     
 }
 
