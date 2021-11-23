@@ -1,4 +1,5 @@
 'use strict';
+
 function AdvancedTimeline() {
     //global arrays
     this.timeline = null;
