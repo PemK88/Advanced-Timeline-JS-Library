@@ -1,3 +1,5 @@
+'use strict';
+
 document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text/css' href='AdvancedTimeline.css'>");
 
 const timeline1 = new AdvancedTimeline;
