@@ -95,7 +95,7 @@ function createTimeline () {
     self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
 }
 
-function createNewPoint(pointTitle='Point', info="N/A") {
+function createNewPoint(pointTitle='Point', info="No Information") {
     const self = this;
     if (!self.timeline || self.activeSubDivion) return;
 
