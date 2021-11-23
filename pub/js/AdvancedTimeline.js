@@ -170,7 +170,7 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
                                     <p class='sub-info-card-front-text'>${infoCard.frontValue}<p>
                                 </div>
                                 <div class='sub-info-card-back focused-info-card' id='back-${infoCard.id}'>
-                                    <h2 class='back-header'>Sub Point Information</h2>
+                                    <h2 class='back-header'>Click me to go back</h2>
                                     <textarea class='info-textbox'>${backInfo}</textarea>
                                 </div>
                             </div>

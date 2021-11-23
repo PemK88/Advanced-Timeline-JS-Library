@@ -122,16 +122,16 @@
 
 .sub-info-card-front-text {
     margin: auto;
-    cursor: default;
     font-size: 10px;
     font-weight: bold;
+    pointer-events: none;
 }
 
 .info-card-front-text {
     margin: auto;
-    cursor: default;
     font-size: 16px;
     font-weight: bold;
+    pointer-events: none;
 }
 
 .sub-info-card-inner {
@@ -253,9 +253,10 @@
     width: 90%;
     text-align: center;
     outline: none;
+    pointer-events: none;
 }
 
 .back-header {
     font-size: 15px;
-    cursor: default;
+    pointer-events: none;
 }
