@@ -1,7 +1,6 @@
 'use strict';
 
 function AdvancedTimeline() {
-    //global arrays
     this.timeline = null;
     this.timelineElement = null;
     this.timelineWrapperElement = null;
@@ -15,9 +14,6 @@ AdvancedTimeline.prototype = {
     makeSubPoint: createSubPoint
 }
 
-
-
-//Object defintions
 class Timeline {
     constructor() {
         this.id = 'advanced-timeline-' + document.querySelectorAll('.advanced-timeline').length;
@@ -32,6 +28,7 @@ class Point {
         this.id = 'point-' + (Object.keys(self.timeline.points).length + 1);
         this.title = title;
         this.infoCard = null;
+        this.backgroundColor = null;
     }
 }
 
@@ -41,6 +38,7 @@ class SubDivision {
         this.subPoints = {};
         this.height = '250px';
         this.marginBottom = '519px';
+        this.backgroundColor = null;
     }
 }
 
@@ -48,12 +46,16 @@ class SubPoint {
     constructor(self, subDivisionId) {
         this.id = 'sub-point-' + (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length + 1);
         this.infoCard = null;
+        this.backgroundColor = null;
+        this.borderColor = null;
     }
 }
 class InfoCard {
     constructor(pointId, value='') {
         this.id = 'sub-info-card-' + pointId;
         this.value = value;
+        this.backgroundColor = null;
+        this.borderColor = null;
     }
 }
 
@@ -62,6 +64,11 @@ class SubInfoCard {
         this.id = 'sub-info-card-' + subPointId;
         this.frontValue = frontValue;
         this.backValue = backValue;
+        this.frontBackgroundColor = null;
+        this.frontBorderColor = null;
+        this.backBackgroundColor = null;
+        this.backBorderColor = null;
+        this.elements = {}
     }
 }
 
@@ -90,7 +97,7 @@ function createTimeline () {
 
 function createNewPoint(pointTitle='Point', info="N/A") {
     const self = this;
-    if (!self.timeline) return;
+    if (!self.timeline || self.activeSubDivion) return;
 
     if(typeof pointTitle !== 'string') {
         pointTitle = 'Point'
