@@ -1,9 +1,19 @@
-//global arrays
-let timeline;
-let timelineElement;
-let timelineWrapperElement;
-let activeSubDivion;
-let pointEndElement;
+function AdvancedTimeline() {
+    //global arrays
+    this.timeline = null;
+    this.timelineElement = null;
+    this.timelineWrapperElement = null;
+    this.activeSubDivion = null;
+    this.pointEndElement = null;
+}
+
+AdvancedTimeline.prototype = {
+    makeTimeline: createTimeline,
+    makeNewPoint: createNewPoint,
+    makeSubPoint: createSubPoint
+}
+
+
 
 //Object defintions
 class Timeline {
@@ -16,16 +26,16 @@ class Timeline {
 }
 
 class Point {
-    constructor(title = null) {
-        this.id = 'point-' + (Object.keys(timeline.points).length + 1);
+    constructor(self, title = null) {
+        this.id = 'point-' + (Object.keys(self.timeline.points).length + 1);
         this.title = title;
         this.infoCard = null;
     }
 }
 
 class SubDivision {
-    constructor() {
-        this.id = 'sub-division-' + (Object.keys(timeline.subDivisions).length + 1);
+    constructor(self) {
+        this.id = 'sub-division-' + (Object.keys(self.timeline.subDivisions).length + 1);
         this.subPoints = {};
         this.height = '250px';
         this.marginBottom = '519px';
@@ -33,8 +43,8 @@ class SubDivision {
 }
 
 class SubPoint {
-    constructor(subDivisionId) {
-        this.id = 'sub-point-' + (Object.keys(timeline.subDivisions[subDivisionId].subPoints).length + 1);
+    constructor(self, subDivisionId) {
+        this.id = 'sub-point-' + (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length + 1);
         this.infoCard = null;
     }
 }
@@ -53,100 +63,97 @@ class SubInfoCard {
     }
 }
 
-
-document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text/css' href='AdvancedTimeline.css'>");
-//Event listeners for buttons
-//move to example.js
-document.querySelector('.create-point').addEventListener('click', createNewPoint);
-document.getElementsByClassName('create-timeline')[0].addEventListener('click', createTimeline);
-
-
 function createTimeline () {
-    timeline = new Timeline;
-    const [point, pointHTML] = createPoint('Start');
-    timeline.points[point.id] = point;
-    const [pointEnd, pointEndHTML] = createPoint('End');
-    timeline.points[pointEnd.id] = pointEnd;
-    const [subDivision, subDivisionHtml] = createSubDivision();
-    timeline.points[point.id] = point;
-    timeline.subDivisions[subDivision.id] = subDivision;
+    const self = this;
+    if (self.timeline) return;
+    self.timeline = new Timeline;
+    const [point, pointHTML] = createPoint(self, 'Start');
+    self.timeline.points[point.id] = point;
+    const [pointEnd, pointEndHTML] = createPoint(self, 'End');
+    self.timeline.points[pointEnd.id] = pointEnd;
+    const [subDivision, subDivisionHtml] = createSubDivision(self);
+    self.timeline.points[point.id] = point;
+    self.timeline.subDivisions[subDivision.id] = subDivision;
 
-    addTimelineToDocument(timeline.id, timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
+    addTimelineToDocument(self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
 
-    timelineElement = document.querySelector(`#${timeline.id}`);
-    timelineElement.addEventListener('change', changeListener);
-    timelineElement.addEventListener('click', clickListener);
+    self.timelineElement = document.querySelector(`#${self.timeline.id}`);
+    self.timelineElement.addEventListener('change', (event) => {changeListener(self, event)});
+    self.timelineElement.addEventListener('click', (event) => {clickListener(self, event)});
 
-    timelineWrapperElement = document.querySelector(`#${timeline.wrapperId}`);
-    pointEndElement = timelineElement.querySelector('#wrapper-point-2');
-    pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
+    self.timelineWrapperElement = document.querySelector(`#${self.timeline.wrapperId}`);
+    self.pointEndElement = self.timelineElement.querySelector('#wrapper-point-2');
+    self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
 }
 
-function createNewPoint(pointTitle='point', info="N/A") {
-    if (!timeline) return;
-    const [point, pointHTML] = createPoint(pointTitle, info);
-    const [subDivision, subDivisionHtml] = createSubDivision();
-    timeline.points[point.id] = point;
-    timeline.subDivisions[subDivision.id] = subDivision;
+function createNewPoint(pointTitle='Point', info="N/A") {
+    const self = this;
+    if (!self.timeline) return;
 
-    addNewPointToTimeline(pointHTML, subDivisionHtml);
+    if(typeof pointTitle !== 'string') {
+        pointTitle = 'Point'
+    }
+    const [point, pointHTML] = createPoint(self, pointTitle, info);
+    const [subDivision, subDivisionHtml] = createSubDivision(self);
+    self.timeline.points[point.id] = point;
+    self.timeline.subDivisions[subDivision.id] = subDivision;
+
+    addNewPointToTimeline(self, pointHTML, subDivisionHtml);
 }
 
-function createPoint(title = 'point', info="N/A") {
-    const point = new Point(title);
+function createSubPoint(pointId = null, frontInfo="Click to see more information", backInfo="No information available") {
+    const self = this;
+    let subDivisionId;
+    let active = false;
+
+    if (self.timeline.points[pointId]) {
+        subDivisionId = $(`#${self.timeline.id} #${pointId}`).parent().next()[0].id;
+    }
+    else {
+        subDivisionId = self.activeSubDivion;
+        active = true;
+    }
+    
+    if (!subDivisionId) return;
+
+    const subPoint = new SubPoint(self, subDivisionId);
+
+    const [infoCard, infoCardHtml] = createSubInfoCard(subPoint.id, frontInfo, backInfo);
+
+    subPoint.infoCard = infoCard;
+
+    self.timeline.subDivisions[subDivisionId].subPoints[subPoint.id] = subPoint;
+
+    const numSubPoints = Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length;
+
+    if (numSubPoints > 6) {
+        self.timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
+        self.timeline.subDivisions[subDivisionId].marginBottom = 519 + ((numSubPoints-6) * 72);
+        self.timelineWrapperElement.style.height = (990 + ((numSubPoints-6) * 118)) + 'px';
+    }
+
+    const overlay =`<div class='overlay'></div>`
+    const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${overlay}${infoCardHtml}</div></div>`;
+
+    addNewSubPointToTimeline(self, subPointHtml, subDivisionId, active);
+}
+
+function createPoint(self, title = 'point', info="N/A") {
+    const point = new Point(self, title);
     const [infoCard, infoCardHtml] = createInfoCard(point.id, info);
     point.infoCard = infoCard;
     const pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
     return [point, pointHtml];
 }
 
-function createSubPoint(pointId = null, frontInfo="Click to see more information", backInfo="No information available") {
-    let subDivisionId;
-    let active = false;
-
-    if (timeline.points[pointId]) {
-        subDivisionId = $(`#${pointId}`).parent().next()[0].id;
-    }
-    else {
-        subDivisionId = activeSubDivion;
-        active = true;
-    }
-    
-    if (!subDivisionId) return;
-
-    const subPoint = new SubPoint(subDivisionId);
-
-    const [infoCard, infoCardHtml] = createSubInfoCard(subPoint.id, frontInfo, backInfo);
-
-    subPoint.infoCard = infoCard;
-
-    timeline.subDivisions[subDivisionId].subPoints[subPoint.id] = subPoint
-
-    const numSubPoints = Object.keys(timeline.subDivisions[subDivisionId].subPoints).length
-
-    if ( numSubPoints > 6) {
-        timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
-        timeline.subDivisions[subDivisionId].marginBottom = 519 + ((numSubPoints-6) * 72);
-        timelineWrapperElement.style.height = (990 + ((numSubPoints-6) * 118)) + 'px';
-    }
-
-    const overlay =`<div class='overlay'></div>`
-    const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${overlay}${infoCardHtml}</div></div>`;
-
-    addNewSubPointToTimeline(subPointHtml, subDivisionId, active);
-}
-
 function createInfoCard(pointId, info="N/A") {
-
     const infoCard = new InfoCard(pointId, info);
     const infoCardHtml = `<div class='info-card' id='${infoCard.id}'><p class='info-card-front-text'>${infoCard.value}<p></div>`
 
     return [infoCard, infoCardHtml];
-
 }
 
 function createSubInfoCard(subPointId, frontInfo="Click to see more information", backInfo="No information available") {
-
     const infoCard = new SubInfoCard(subPointId, frontInfo, backInfo);
     const infoCardHtml = `<div class='sub-info-card' id='${infoCard.id}'>
                             <div class='sub-info-card-inner' id='inner-${infoCard.id}'>
@@ -154,6 +161,8 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
                                     <p class='sub-info-card-front-text'>${infoCard.frontValue}<p>
                                 </div>
                                 <div class='sub-info-card-back focused-info-card' id='back-${infoCard.id}'>
+                                    <h2 class='back-header'>Sub Point Information</h2>
+                                    <textarea class='info-textbox'>${backInfo}</textarea>
                                 </div>
                             </div>
                         </div>`
@@ -162,8 +171,8 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
 
 }
 
-function createSubDivision() {
-    const subDivision = new SubDivision();
+function createSubDivision(self) {
+    const subDivision = new SubDivision(self);
     const subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'></div>`;
     return [subDivision, subDivisionHtml];
 }
@@ -177,54 +186,51 @@ function addTimelineToDocument(timelineId, wrapperId, pointHTML, pointEndHTML, s
     body.insertAdjacentHTML('beforeend', newTimeline);
 }
 
-function addNewPointToTimeline(pointHTML, subDivisionHtml) {
-    pointEndElement.insertAdjacentHTML('beforebegin', pointHTML);
-    pointEndElement.insertAdjacentHTML('beforebegin', subDivisionHtml);
+function addNewPointToTimeline(self, pointHTML, subDivisionHtml) {
+    self.pointEndElement.insertAdjacentHTML('beforebegin', pointHTML);
+    self.pointEndElement.insertAdjacentHTML('beforebegin', subDivisionHtml);
 }
 
-function addNewSubPointToTimeline(subPointHTML, subDivisionId, active) {
-    timelineElement.querySelector(`#${subDivisionId}`).insertAdjacentHTML('beforeend', subPointHTML);
+function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active) {
+    self.timelineElement.querySelector(`#${subDivisionId}`).insertAdjacentHTML('beforeend', subPointHTML);
     if (active) {
-        $(`#${timeline.id} #${subDivisionId}`).css({'height': timeline.subDivisions[`${subDivisionId}`].height,
-            'margin-bottom': timeline.subDivisions[`${subDivisionId}`].marginBottom});
-        $(`#${timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+        $(`#${self.timeline.id} #${subDivisionId}`).css({'height': self.timeline.subDivisions[`${subDivisionId}`].height,
+            'margin-bottom': self.timeline.subDivisions[`${subDivisionId}`].marginBottom});
+        $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
     }
 }
 
-function zoomDivision(event) {
-
-    activeSubDivion = event.target.id;
-    const prevDiv = $(`#${timeline.id} #${event.target.id}`).prev();
-    const nextDiv = $(`#${timeline.id} #${event.target.id}`).next();
+function zoomDivision(self, event) {
+    self.activeSubDivion = event.target.id;
+    const prevDiv = $(`#${self.timeline.id} #${event.target.id}`).prev();
+    const nextDiv = $(`#${self.timeline.id} #${event.target.id}`).next();
     let eventFired = 0;
     let newHeight = '800px'
-    console.log(timelineWrapperElement.scrollTop + " old scroll top")
-    $(`#${timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
-    $(`#${timeline.id} .wrapper-point .info-card`).toggleClass('appear-info-card', false);
-    $(`#${timeline.id} .wrapper-point`).prop("disabled", true);
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
+    $(`#${self.timeline.id} .wrapper-point .info-card`).toggleClass('appear-info-card', false);
+    $(`#${self.timeline.id} .wrapper-point`).prop("disabled", true);
 
-    $(`#${timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
-    $(`#${timeline.id} .subdivision`).prop("disabled", true);
-    $(`#${timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
-    $(`#${timeline.id} #${event.target.id}`).prop("disabled", false);
-    $(`#${timeline.id} #${event.target.id}`).css({'height': timeline.subDivisions[`${event.target.id}`].height,
-        'margin-bottom': timeline.subDivisions[`${event.target.id}`].marginBottom});
-    $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
+    $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
+    $(`#${self.timeline.id} .subdivision`).prop("disabled", true);
+    $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
+    $(`#${self.timeline.id} #${event.target.id}`).prop("disabled", false);
+    $(`#${self.timeline.id} #${event.target.id}`).css({'height': self.timeline.subDivisions[`${event.target.id}`].height,
+        'margin-bottom': self.timeline.subDivisions[`${event.target.id}`].marginBottom});
+    $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
 
-    $(`#${timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
+    $(`#${self.timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
         () => {
             if(eventFired) {
-                console.log('event fired position' + timelineWrapperElement.scrollTop)
-                timelineWrapperElement.style.overflowY = 'hidden';
-                timelineWrapperElement.style.height = newHeight;
+                self.timelineWrapperElement.style.overflowY = 'hidden';
+                self.timelineWrapperElement.style.height = newHeight;
                 return;
             }
 
-            timelineWrapperElement.scrollTop =  timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
+            self.timelineWrapperElement.scrollTop =  self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
 
-            const startPoint = timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
-            const startDiv = timelineElement.querySelector(`#${event.target.id}`).offsetTop;
-            const endDiv = timelineElement.querySelector(`#${nextDiv[0].id}`).offsetTop
+            const startPoint = self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
+            const startDiv = self.timelineElement.querySelector(`#${event.target.id}`).offsetTop;
+            const endDiv = self.timelineElement.querySelector(`#${nextDiv[0].id}`).offsetTop
 
             newHeight = (startDiv + endDiv + 33 - 2*startPoint) + 'px';
             eventFired = 1;
@@ -233,7 +239,7 @@ function zoomDivision(event) {
 }
 
 
-function clickListener (event) {
+function clickListener (self, event) {
     if(!event.target.id) {
         return;
     }
@@ -242,44 +248,44 @@ function clickListener (event) {
         return;
     }
     else if(event.target.className === 'subdivision' ) {  
-        zoomDivision(event); 
+        zoomDivision(self, event); 
     }
     else if(event.target.className === 'subdivision subdivision-zoom') {
-        activeSubDivion = null;
-        $(`#${timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
-        $(`#${timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
-        $(`#${timeline.id} .subdivision`).prop("disabled", false);
-        $(`#${timeline.id} .wrapper-point`).prop("disabled", false);
-        $(`#${timeline.id} #${event.target.id}`).removeAttr("style");
-        $(`#${timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
-        $(`#${timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false)
-        timelineWrapperElement.style = '';
+        self.activeSubDivion = null;
+        $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
+        $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
+        $(`#${self.timeline.id} .subdivision`).prop("disabled", false);
+        $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
+        $(`#${self.timeline.id} #${event.target.id}`).removeAttr("style");
+        $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
+        $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false)
+        self.timelineWrapperElement.style = '';
     }
     else if(event.target.className === 'sub-point') {
-        $(`#${timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
+        $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
     }
     else if(event.target.className === 'sub-info-card-front') {
-        const pointIdx = $(`#${timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index()
-        $(`#${timeline.id} #${event.target.id}`).next().css({'margin-top': (35-pointIdx*55)+'px'})
-        $(`#${timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
-        $(`#${timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
-        $(`#${timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
-        $(`#${timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
+        const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index()
+        $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': (35-pointIdx*55)+'px'})
+        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
+        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
+        $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
+        $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
 
     }
     else if(event.target.className === 'sub-info-card-back focused-info-card flip-0') {
-        $(`#${timeline.id} #${event.target.id}`).toggleClass('flip-0',false);
-        $(`#${timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
-        $(`#${timeline.id} #${event.target.id}`).closest('.sub-info-card').removeAttr('style');
-        $(`#${timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().removeAttr('style');
+        $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-0',false);
+        $(`#${self.timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
+        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').removeAttr('style');
+        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().removeAttr('style');
     }
     else if(event.target.className === 'point') {
-        $(`#${timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');
+        $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');
     }
 }
 
-function changeListener (event) {
+function changeListener (self, event) {
     if(event.target.className === 'point') {
-        timeline.points[event.target.id].title = event.target.value
+        self.timeline.points[event.target.id].title = event.target.value
     }
 }
