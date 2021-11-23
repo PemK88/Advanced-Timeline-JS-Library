@@ -15,11 +15,12 @@ AdvancedTimeline.prototype = {
 }
 
 class Timeline {
-    constructor() {
+    constructor(backgroundColor='white') {
         this.id = 'advanced-timeline-' + document.querySelectorAll('.advanced-timeline').length;
         this.wrapperId = 'wrapper-advanced-timeline-' + document.querySelectorAll('.wrapper-advanced-timeline').length;
         this.points = {};
         this.subDivisions = {};
+        this.backgroundColor = backgroundColor;
     }
 }
 
@@ -37,7 +38,7 @@ class SubDivision {
         this.id = 'sub-division-' + (Object.keys(self.timeline.subDivisions).length + 1);
         this.subPoints = {};
         this.height = '250px';
-        this.marginBottom = '519px';
+        this.marginBottom = '235px';
         this.backgroundColor = null;
     }
 }
@@ -71,11 +72,21 @@ class SubInfoCard {
         this.elements = {}
     }
 }
+/*https://stackoverflow.com/questions/48484767/javascript-check-if-string-is-valid-css-color*/
+function isColor(strColor){
+    var s = new Option().style;
+    s.color = strColor;
+    return s.color == strColor;
+  }
 
-function createTimeline () {
+function createTimeline (domElement='body', backgroundColor='white') {
     const self = this;
+    if(!isColor(backgroundColor)) {
+        backgroundColor = 'white';
+    }
+
     if (self.timeline) return;
-    self.timeline = new Timeline;
+    self.timeline = new Timeline(backgroundColor);
     const [point, pointHTML] = createPoint(self, 'Start');
     self.timeline.points[point.id] = point;
     const [pointEnd, pointEndHTML] = createPoint(self, 'End');
@@ -84,7 +95,7 @@ function createTimeline () {
     self.timeline.points[point.id] = point;
     self.timeline.subDivisions[subDivision.id] = subDivision;
 
-    addTimelineToDocument(self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
+    addTimelineToDocument(domElement, self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
 
     self.timelineElement = document.querySelector(`#${self.timeline.id}`);
     self.timelineElement.addEventListener('change', (event) => {changeListener(self, event)});
@@ -93,6 +104,7 @@ function createTimeline () {
     self.timelineWrapperElement = document.querySelector(`#${self.timeline.wrapperId}`);
     self.pointEndElement = self.timelineElement.querySelector('#wrapper-point-2');
     self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
+    self.timelineWrapperElement.style.backgroundColor = backgroundColor;
 }
 
 function createNewPoint(pointTitle='Point', info="No Information") {
@@ -137,11 +149,11 @@ function createSubPoint(pointId = null, frontInfo="Click to see more information
 
     if (numSubPoints > 6) {
         self.timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
-        self.timeline.subDivisions[subDivisionId].marginBottom = 519 + ((numSubPoints-6) * 72);
-        self.timelineWrapperElement.style.height = (990 + ((numSubPoints-6) * 118)) + 'px';
+        self.timeline.subDivisions[subDivisionId].marginBottom = 235 + ((numSubPoints-6) * 36);
+        self.timelineWrapperElement.style.height = (653 + ((numSubPoints-6) * 118)) + 'px';
     }
 
-    const overlay =`<div class='overlay'></div>`
+    const overlay =`<div class='overlay' style="background-color: ${self.timeline.backgroundColor};"></div>`
     const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${overlay}${infoCardHtml}</div></div>`;
 
     addNewSubPointToTimeline(self, subPointHtml, subDivisionId, active);
@@ -188,8 +200,8 @@ function createSubDivision(self) {
 
 //DOM manipulating functions
 
-function addTimelineToDocument(timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
-    const body = document.querySelector('body');
+function addTimelineToDocument(domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
+    const body = document.querySelector(`${domElement}`);
     const newTimeline = `<div id='${wrapperId}' class='wrapper-advanced-timeline'>
         <ul id='${timelineId}' class='advanced-timeline'>` + pointHTML + subDivisionHtml + pointEndHTML +'</ul></div>';
     body.insertAdjacentHTML('beforeend', newTimeline);
@@ -230,7 +242,7 @@ function zoomDivision(self, event) {
     $(`#${self.timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
         () => {
             if(eventFired) {
-                self.timelineWrapperElement.style.overflowY = 'hidden';
+                self.timelineWrapperElement.style.overflow = 'hidden';
                 self.timelineWrapperElement.style.height = newHeight;
                 return;
             }
@@ -267,26 +279,36 @@ function clickListener (self, event) {
         $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
         $(`#${self.timeline.id} #${event.target.id}`).removeAttr("style");
         $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
-        $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false)
+        $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false);
         self.timelineWrapperElement.style = '';
     }
     else if(event.target.className === 'sub-point') {
         $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
     }
     else if(event.target.className === 'sub-info-card-front') {
-        const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index()
-        $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': (35-pointIdx*55)+'px'})
+        const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
+        const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+        
+        $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': (-(pointIdx+1)*30)+'px'})
+        //display overlay
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
         $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
+        $(`#${self.timeline.id} .subdivision:not(#${parentDivId})`).toggleClass("disappear", true);
+        $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
 
     }
     else if(event.target.className === 'sub-info-card-back focused-info-card flip-0') {
+        const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+        
         $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-0',false);
         $(`#${self.timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').removeAttr('style');
-        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().removeAttr('style');
+        //remove overlay
+        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'none'});
+        $(`#${self.timeline.id} .subdivision:not(#${parentDivId})`).toggleClass("disappear", false);
+        $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
     }
     else if(event.target.className === 'point') {
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');

@@ -9,9 +9,8 @@
 
 .wrapper-advanced-timeline {
     overflow-y: scroll;
-    height: 800px;
+    height: 655px;
     position: relative;
-    display: grid;
 }
 
 .grid1 {
@@ -21,14 +20,13 @@
 
 .point {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 28px;
+    font-size: 24px;
     color: #fff;
     background-color: #3f51b5;
-    padding: 10px;
+    padding: 8px;
     font-weight: bold;
     text-align: center;
     border-radius: 10px;
-    min-width: 100px;
     width: 120px;
     border: none;
     overflow: hidden;
@@ -44,33 +42,30 @@
     background: #283474;
     transform-origin: center top;
     transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
-    gap: 30px;
-    padding-top: 30px;
-    padding-bottom: 40px;
+    gap: 25px;
+    padding-top: 25px;
+    padding-bottom: 14px;
     cursor: pointer;
 }
 
 .subdivision-zoom {
-    transform: scale(2.6);
-    margin-top: 7px;
-    margin-bottom: 519px;
+    transform: scale(1.8);
+    margin-top: 5px;
+    margin-bottom: 235px;
 }
 
 .wrapper-point {
-    height: 52px;
-    width: 140px;
+    height: 43px;
+    width: 136px;
     overflow: visible;
     transform-origin: center;
     transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
 }
 
 .wrapper-point-visible {
-    /* height: 0px;
-    width: 0px; */
     display: block;
-    transform: scale(1.3);
-    z-index: -1;
-    /* position: absolute; */
+    transform: scale(1.2);
+    pointer-events: none;
 }
 
 .wrapper-point-visible-next {
@@ -83,11 +78,11 @@
 }
 
 .sub-point {
-    height: 15px;
-    width: 15px;
+    height: 14px;
+    width: 14px;
     background-color: #f4f4f5;
     border-radius: 50%;
-    margin-left: -6px;
+    margin-left: -5px;
     border: 2px solid #283574;
     cursor: pointer;
 }
@@ -106,7 +101,7 @@
     height: 60px;
     width: 150px;
     background-color: transparent;
-    margin-top: -30px;
+    margin-top: -20px;
     font-family: Arial, Helvetica, sans-serif;
     border-radius: 5px;
     position: absolute;
@@ -201,18 +196,19 @@
     top: -33px;
     left: -300px;
     z-index: 200;
+    cursor: default;
 }
 
 .focused-info-card {
     margin-top: -30px;
     width: 350px;
-    margin-left: -240px;
+    margin-left: -230px;
     height: 270px;
     z-index: 2;
 }
 
 .wrapper-sub-point:nth-of-type(2n) .focused-info-card {
-    margin-left: 65px;
+    margin-left: 35px;
 }
 
 .info-card  {
@@ -259,4 +255,10 @@
 .back-header {
     font-size: 15px;
     pointer-events: none;
+}
+
+.disappear {
+    opacity: 0;
+    pointer-events: none;
+    cursor: default;
 }
