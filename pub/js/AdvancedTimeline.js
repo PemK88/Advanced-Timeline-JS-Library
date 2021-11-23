@@ -79,7 +79,7 @@ function isColor(strColor){
     return s.color == strColor;
   }
 
-function createTimeline (domElement='body', backgroundColor='white') {
+function createTimeline (domElement='body', backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A") {
     const self = this;
     if(!isColor(backgroundColor)) {
         backgroundColor = 'white';
@@ -87,9 +87,9 @@ function createTimeline (domElement='body', backgroundColor='white') {
 
     if (self.timeline) return;
     self.timeline = new Timeline(backgroundColor);
-    const [point, pointHTML] = createPoint(self, 'Start');
+    const [point, pointHTML] = createPoint(self, startTitle, startInfo);
     self.timeline.points[point.id] = point;
-    const [pointEnd, pointEndHTML] = createPoint(self, 'End');
+    const [pointEnd, pointEndHTML] = createPoint(self, endTitle, endInfo);
     self.timeline.points[pointEnd.id] = pointEnd;
     const [subDivision, subDivisionHtml] = createSubDivision(self);
     self.timeline.points[point.id] = point;
@@ -104,7 +104,7 @@ function createTimeline (domElement='body', backgroundColor='white') {
     self.timelineWrapperElement = document.querySelector(`#${self.timeline.wrapperId}`);
     self.pointEndElement = self.timelineElement.querySelector('#wrapper-point-2');
     self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
-    self.timelineWrapperElement.style.backgroundColor = backgroundColor;
+    self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
 }
 
 function createNewPoint(pointTitle='Point', info="No Information") {
@@ -112,7 +112,7 @@ function createNewPoint(pointTitle='Point', info="No Information") {
     if (!self.timeline || self.activeSubDivion) return;
 
     if(typeof pointTitle !== 'string') {
-        pointTitle = 'Point'
+        pointTitle = 'Point';
     }
     const [point, pointHTML] = createPoint(self, pointTitle, info);
     const [subDivision, subDivisionHtml] = createSubDivision(self);
@@ -120,6 +120,8 @@ function createNewPoint(pointTitle='Point', info="No Information") {
     self.timeline.subDivisions[subDivision.id] = subDivision;
 
     addNewPointToTimeline(self, pointHTML, subDivisionHtml);
+
+    return point.id;
 }
 
 function createSubPoint(pointId = null, frontInfo="Click to see more information", backInfo="No information available") {
@@ -281,6 +283,7 @@ function clickListener (self, event) {
         $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
         $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false);
         self.timelineWrapperElement.style = '';
+        self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
     }
     else if(event.target.className === 'sub-point') {
         $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
