@@ -51,7 +51,7 @@
 }
 
 .subdivision-zoom {
-    transform: scale(1.5, 2.6);
+    transform: scale(2.6);
     margin-top: 7px;
     margin-bottom: 519px;
 }
@@ -83,11 +83,11 @@
 }
 
 .sub-point {
-    height: 13px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
     background-color: #f4f4f5;
     border-radius: 50%;
-    margin-left: -8px;
+    margin-left: -6px;
     border: 2px solid #283574;
     cursor: pointer;
 }
@@ -102,13 +102,12 @@
 }
 
 .sub-info-card {
-    margin-left: 80px;
-    height: 80px;
-    width: 250px;
+    margin-left: 60px;
+    height: 60px;
+    width: 150px;
     background-color: transparent;
     margin-top: -30px;
     font-family: Arial, Helvetica, sans-serif;
-    transform: scaleY(0.769);
     border-radius: 5px;
     position: absolute;
     opacity: 0;
@@ -118,14 +117,13 @@
 }
 
 .wrapper-sub-point:nth-of-type(2n) .sub-info-card{
-    margin-left: -304px;
+    margin-left: -200px;
 }
 
 .sub-info-card-front-text {
-    transform: scaleY(0.769);
     margin: auto;
     cursor: default;
-    font-size: 13px;
+    font-size: 10px;
     font-weight: bold;
 }
 
@@ -195,22 +193,21 @@
 }
 
 .overlay {
-    width: 12100%;
+    width: 7000%;
     height: 120%;
     background: rgb(255, 255, 255);
     display: none;
     position: absolute;
     top: -33px;
-    left: -500px;
-    height: 120%;
+    left: -300px;
     z-index: 200;
 }
 
 .focused-info-card {
     margin-top: -30px;
-    width: 500px;
-    margin-left: -320px;
-    height: 300px;
+    width: 350px;
+    margin-left: -240px;
+    height: 270px;
     z-index: 2;
 }
 
@@ -252,13 +249,13 @@
     border: 1px solid rgb(85, 139, 22);
     border-radius: 5px;
     margin: auto;
-    height: 300px;
+    height: 90%;
+    width: 90%;
     text-align: center;
     outline: none;
-    width: 422px;
-    transform: scaleY(0.769);
 }
 
 .back-header {
-    transform: scaleY(0.769);
+    font-size: 15px;
+    cursor: default;
 }
