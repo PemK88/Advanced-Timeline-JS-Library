@@ -45,7 +45,7 @@ class SubDivision {
 
 class SubPoint {
     constructor(self, subDivisionId) {
-        this.id = 'sub-point-' + (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length + 1);
+        this.id = 'sub-point-' + (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length + 1) + '-' + subDivisionId;
         this.infoCard = null;
         this.backgroundColor = null;
         this.borderColor = null;
@@ -105,6 +105,8 @@ function createTimeline (domElement='body', backgroundColor='white', startTitle=
     self.pointEndElement = self.timelineElement.querySelector('#wrapper-point-2');
     self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
     self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
+
+    return [point.id, pointEnd.id];
 }
 
 function createNewPoint(pointTitle='Point', info="No Information") {
@@ -291,14 +293,15 @@ function clickListener (self, event) {
     else if(event.target.className === 'sub-info-card-front') {
         const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
         const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
-        
         $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': (-(pointIdx+1)*30)+'px'})
         //display overlay
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
         $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
-        $(`#${self.timeline.id} .subdivision:not(#${parentDivId})`).toggleClass("disappear", true);
+        $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", true);
+        $(`#${self.timeline.id} #${parentDivId}`).toggleClass("disappear", false);
+        console.log(parentDivId);
         $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
 
     }
@@ -310,7 +313,7 @@ function clickListener (self, event) {
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').removeAttr('style');
         //remove overlay
         $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'none'});
-        $(`#${self.timeline.id} .subdivision:not(#${parentDivId})`).toggleClass("disappear", false);
+        $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", false);
         $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
     }
     else if(event.target.className === 'point') {
