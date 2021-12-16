@@ -167,7 +167,7 @@ function createPoint(self, title = 'point', info="N/A") {
     const point = new Point(self, title);
     const [infoCard, infoCardHtml] = createInfoCard(point.id, info);
     point.infoCard = infoCard;
-    const pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
+    const pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><span class='zoomPopup'>Click Me!</span><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
     return [point, pointHtml];
 }
 
@@ -187,6 +187,7 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
                                 </div>
                                 <div class='sub-info-card-back focused-info-card' id='back-${infoCard.id}'>
                                     <h2 class='back-header'>Click me to go back</h2>
+                                    <div class='close-btn' id='close-btn-back-${infoCard.id}'>X</div>
                                     <textarea class='info-textbox'>${backInfo}</textarea>
                                 </div>
                             </div>
@@ -198,7 +199,7 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
 
 function createSubDivision(self) {
     const subDivision = new SubDivision(self);
-    const subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'></div>`;
+    const subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'><span class='zoomPopup'>Zoom In</span></div>`;
     return [subDivision, subDivisionHtml];
 }
 
@@ -225,7 +226,7 @@ function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active) {
     }
 }
 
-function zoomDivision(self, event) {
+function zoomIntoDivision(self, event) {
     self.activeSubDivion = event.target.id;
     const prevDiv = $(`#${self.timeline.id} #${event.target.id}`).prev();
     const nextDiv = $(`#${self.timeline.id} #${event.target.id}`).next();
@@ -233,16 +234,18 @@ function zoomDivision(self, event) {
     let newHeight = '800px'
     $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
     $(`#${self.timeline.id} .wrapper-point .info-card`).toggleClass('appear-info-card', false);
+    $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'hidden'});
     $(`#${self.timeline.id} .wrapper-point`).prop("disabled", true);
 
     $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
     $(`#${self.timeline.id} .subdivision`).prop("disabled", true);
+    $(`#${self.timeline.id} .subdivision`).css({'box-shadow': 'none'});
     $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
     $(`#${self.timeline.id} #${event.target.id}`).prop("disabled", false);
     $(`#${self.timeline.id} #${event.target.id}`).css({'height': self.timeline.subDivisions[`${event.target.id}`].height,
         'margin-bottom': self.timeline.subDivisions[`${event.target.id}`].marginBottom});
     $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
-
+    $(`#${self.timeline.id} #${event.target.id} .zoomPopup`).css({'display': 'none'});
     $(`#${self.timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
         () => {
             if(eventFired) {
@@ -250,18 +253,74 @@ function zoomDivision(self, event) {
                 self.timelineWrapperElement.style.height = newHeight;
                 return;
             }
+            self.timelineWrapperElement.scrollTo({top: self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop, behavior: 'smooth'});
 
-            self.timelineWrapperElement.scrollTop =  self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
+            //self.timelineWrapperElement.scrollTop =  self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
 
             const startPoint = self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
             const startDiv = self.timelineElement.querySelector(`#${event.target.id}`).offsetTop;
             const endDiv = self.timelineElement.querySelector(`#${nextDiv[0].id}`).offsetTop
 
-            newHeight = (startDiv + endDiv + 33 - 2*startPoint) + 'px';
+            newHeight = (startDiv + endDiv + 55 - 2*startPoint) + 'px';
             eventFired = 1;
         });
 
 }
+
+function zoomOutOfDivision(self, id) {
+    self.activeSubDivion = null;
+    let eventFired = 0;
+    const prevDiv = $(`#${self.timeline.id} #${id}`).prev();
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
+    $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
+    $(`#${self.timeline.id} .subdivision`).prop("disabled", false);
+    $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
+    $(`#${self.timeline.id} #${id}`).removeAttr("style");
+    $(`#${self.timeline.id} #${id} .wrapper-sub-point`).toggleClass('display-flex', false);
+    $(`#${self.timeline.id} .subdivision:not(#${id})`).toggleClass("cursor-not-allowed", false);
+    $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'visible'});
+
+    //remove height
+    self.timelineWrapperElement.style = '';
+    self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
+
+    $(`#${self.timeline.id} #${id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
+        () => {
+            if(eventFired) {
+                self.timelineWrapperElement.scrollTo({top: self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop, behavior: 'smooth'});
+                return;
+            }
+            eventFired = 1;
+        });
+}
+
+function displayBackSubInfoCard(self, event) {
+    const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
+    const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+    $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': ((-(pointIdx+1)*30) + 10)+'px'});
+
+    //display overlay
+    $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
+    $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
+    $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
+    $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
+    $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", true);
+    $(`#${self.timeline.id} #${parentDivId}`).toggleClass("disappear", false);
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
+}
+
+function displayFrontSubInfoCard(self, id) {
+    const parentDivId = $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+        
+    $(`#${self.timeline.id} #${id}`).toggleClass('flip-0',false);
+    $(`#${self.timeline.id} #${id}`).prev().toggleClass('flip-180',false);
+    $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').removeAttr('style');
+    //remove overlay
+    $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').prev().css({'display': 'none'});
+    $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", false);
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
+}
+
 
 
 function clickListener (self, event) {
@@ -269,55 +328,34 @@ function clickListener (self, event) {
         return;
     }
     
-    if ($(`#${event.target.id}`).prop('disabled')) {
+    if ($(`#${self.timeline.id} #${event.target.id}`).prop('disabled')) {
         return;
     }
     else if(event.target.className === 'subdivision' ) {  
-        zoomDivision(self, event); 
+        zoomIntoDivision(self, event); 
     }
-    else if(event.target.className === 'subdivision subdivision-zoom') {
-        self.activeSubDivion = null;
-        $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
-        $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
-        $(`#${self.timeline.id} .subdivision`).prop("disabled", false);
-        $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
-        $(`#${self.timeline.id} #${event.target.id}`).removeAttr("style");
-        $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', false);
-        $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", false);
-        self.timelineWrapperElement.style = '';
-        self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
+    // else if(event.target.className === 'subdivision subdivision-zoom') {
+    //     zoomOutOfDivision(self, event.target.id);
+    // }
+    else if(self.activeSubDivion && event.target.id === self.timeline.id){
+        zoomOutOfDivision(self, self.activeSubDivion);
     }
     else if(event.target.className === 'sub-point') {
         $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
     }
     else if(event.target.className === 'sub-info-card-front') {
-        const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
-        const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
-        $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-top': (-(pointIdx+1)*30)+'px'})
-        //display overlay
-        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block'});
-        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
-        $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
-        $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
-        $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", true);
-        $(`#${self.timeline.id} #${parentDivId}`).toggleClass("disappear", false);
-        console.log(parentDivId);
-        $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
-
+        displayBackSubInfoCard(self, event)
     }
-    else if(event.target.className === 'sub-info-card-back focused-info-card flip-0') {
-        const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
-        
-        $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-0',false);
-        $(`#${self.timeline.id} #${event.target.id}`).prev().toggleClass('flip-180',false);
-        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').removeAttr('style');
-        //remove overlay
-        $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'none'});
-        $(`#${self.timeline.id} .subdivision`).toggleClass("disappear", false);
-        $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
+    // else if(event.target.className === 'sub-info-card-back focused-info-card flip-0') {
+    //     displayFrontSubInfoCard(self, event.target.id)
+    // }
+    else if(event.target.className === 'close-btn') {
+        const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).parent()[0].id;
+        displayFrontSubInfoCard(self, parentDivId);
     }
     else if(event.target.className === 'point') {
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');
+        $(`#${self.timeline.id} #${event.target.id}`).prev().css({'display': 'none'});
     }
 }
 
