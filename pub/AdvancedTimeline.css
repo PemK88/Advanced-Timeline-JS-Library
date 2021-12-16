@@ -273,7 +273,11 @@
     width: 90%;
     text-align: center;
     outline: none;
-    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 6px;
+    position: relative;
+    gap: 10px;
 }
 
 .back-header {
@@ -360,4 +364,36 @@
     border-width: 6px;
     border-style: solid;
     border-color: transparent transparent transparent gray;
+  }
+
+  .audio-title { 
+    font-size: 10px;
+    margin: 0px;
+    font-weight: 530;
+    text-decoration: underline 0.5px;
+  }
+
+  .audio-icon {
+    display: flex;
+    cursor: pointer;
+  }
+
+  .audio-icon-square {
+    width: 4px;
+    height: 4px;
+    border-radius: 0.5px;
+    background: #e90707;
+    margin-top: 3.7px;
+    margin-left: 2px;
+  }
+
+  .audio-icon-triangle {
+    width: 0;
+    height: 0;
+    border-radius: 1px;
+    border-top: 6px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 6px solid #e90707;
+    margin-left: -3px;
+    align-self: center;
   }

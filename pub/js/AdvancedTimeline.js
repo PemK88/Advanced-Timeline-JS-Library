@@ -11,7 +11,8 @@ function AdvancedTimeline() {
 AdvancedTimeline.prototype = {
     makeTimeline: createTimeline,
     makeNewPoint: createNewPoint,
-    makeSubPoint: createSubPoint
+    makeSubPoint: createSubPoint,
+    addAudioTosubPoint: createAudioelement
 }
 
 class Timeline {
@@ -161,6 +162,8 @@ function createSubPoint(pointId = null, frontInfo="Click to see more information
     const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${overlay}${infoCardHtml}</div></div>`;
 
     addNewSubPointToTimeline(self, subPointHtml, subDivisionId, active);
+
+    return subPoint.id;
 }
 
 function createPoint(self, title = 'point', info="N/A") {
@@ -188,7 +191,7 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
                                 <div class='sub-info-card-back focused-info-card' id='back-${infoCard.id}'>
                                     <h2 class='back-header'>Click me to go back</h2>
                                     <div class='close-btn' id='close-btn-back-${infoCard.id}'>X</div>
-                                    <textarea class='info-textbox'>${backInfo}</textarea>
+                                    <div class='info-textbox' id='elements-${infoCard.id}'></div>
                                 </div>
                             </div>
                         </div>`
@@ -203,7 +206,60 @@ function createSubDivision(self) {
     return [subDivision, subDivisionHtml];
 }
 
+function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left='', right='', bottom='') {
+    if(!audioSrc || !subPointId){
+        return;
+    }
+    const self = this;
+    const subDivisionId = $(`#${self.timeline.id} #${subPointId}`).closest('.subdivision')[0].id
+    const subInfoCardId = $(`#${self.timeline.id} #${subPointId} .sub-info-card`)[0].id;
+    const elementsLength = (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements).length + 1)
+    const elementDivId = $(`#${self.timeline.id} #${subPointId} .sub-info-card-back .info-textbox`)[0].id;
+
+    const audio = {
+        id: 'element-' + elementsLength + '-' + subInfoCardId,
+        src: audioSrc,
+        title: audioTitle,
+        isPlaying: false
+    };
+
+    self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements[audio.id] = audio;
+
+    let positions = '';
+
+    if(typeof top === 'number'){
+        positions += ('top: ' + top + 'px;')
+    }
+    if(typeof left === 'number'){
+        positions += ('left: ' + left + 'px;')
+    }
+    if(typeof right === 'number'){
+        positions += ('right: ' + right + 'px;')
+    }
+    if(typeof bottom === 'number'){
+        positions += ('bottom: ' + bottom + 'px;')
+    }
+
+    addAudioElement(self, audio, elementDivId, positions);
+
+}
+
 //DOM manipulating functions
+function addAudioElement(self, audio, elementDivId, positions) {
+    const audioHTML = `<div style='display: inline-flex;height: fit-content;${(positions ? 'position: absolute;' + positions : '')}'>
+        <h3 class='audio-title'>${audio.title}</h3>
+        <div class='audio-icon' id='${audio.id}'>
+            <div class='audio-icon-square' id='square-${audio.id}'></div>
+            <div class='audio-icon-triangle' id='triangle-${audio.id}'></div>
+        </div>
+        <audio id='audio-${audio.id}' hidden>
+            <source src='${audio.src}' type="audio/mp3">
+        </audio>
+        
+    </div>`
+    
+    self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', audioHTML);
+}
 
 function addTimelineToDocument(domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
     const body = document.querySelector(`${domElement}`);
@@ -310,7 +366,15 @@ function displayBackSubInfoCard(self, event) {
 }
 
 function displayFrontSubInfoCard(self, id) {
-    const parentDivId = $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+    const audios = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('audio')
+    
+    audios.forEach((audio,i) => {
+        audio.pause();
+        audio.currentTime = 0;
+    })
+
+    $(`#${self.timeline.id} #${id} .info-textbox .audio-icon-triangle`).css({'border-right-color': ''})
+    $(`#${self.timeline.id} #${id} .info-textbox  .audio-icon-square`).css({'background': ''})
         
     $(`#${self.timeline.id} #${id}`).toggleClass('flip-0',false);
     $(`#${self.timeline.id} #${id}`).prev().toggleClass('flip-180',false);
@@ -321,10 +385,15 @@ function displayFrontSubInfoCard(self, id) {
     $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
 }
 
-
+function togglePlay(self, audioId, id) {
+    const audio = self.timelineElement.querySelector(`#${audioId}`)
+    audio.paused ? $(`#${self.timeline.id} #${id} .audio-icon-triangle`).css({'border-right-color': '#2bb731'}) : $(`#${self.timeline.id} #${id} .audio-icon-triangle`).css({'border-right-color': ''});
+    audio.paused ? $(`#${self.timeline.id} #${id} .audio-icon-square`).css({'background': '#2bb731'}) : $(`#${self.timeline.id} #${id} .audio-icon-square`).css({'background': ''});
+    return audio.paused ? audio.play() : audio.pause();
+  };
 
 function clickListener (self, event) {
-    if(!event.target.id) {
+    if(!event.target.id ) {
         return;
     }
     
@@ -357,7 +426,13 @@ function clickListener (self, event) {
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');
         $(`#${self.timeline.id} #${event.target.id}`).prev().css({'display': 'none'});
     }
+    else if(event.target.className === 'audio-icon-triangle' || event.target.className === 'audio-icon-square' || event.target.className === 'audio-icon') {
+        const id = (event.target.className === 'audio-icon') ? event.target.id : $(`#${self.timeline.id} #${event.target.id}`).closest('.audio-icon')[0].id;
+        togglePlay(self, `audio-${id}`, id);
+    }
 }
+
+
 
 function changeListener (self, event) {
     if(event.target.className === 'point') {
