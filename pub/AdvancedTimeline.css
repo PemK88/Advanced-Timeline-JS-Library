@@ -61,7 +61,7 @@
     margin-bottom: 235px;
 }
 
-.wrapper-point {
+.advanced-timeline .wrapper-point {
     height: 43px;
     width: 136px;
     display: flex;
@@ -71,7 +71,7 @@
     transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
 }
 
-.wrapper-point-visible {
+.advanced-timeline .wrapper-point-visible {
     display: block;
     transform: scale(1.2);
     pointer-events: none;
@@ -231,7 +231,7 @@
     margin-left: 35px;
 }
 
-.info-card  {
+.advanced-timeline .info-card  {
     margin-left: 400px;
     height: 70px;
     width: 200px;
@@ -251,7 +251,7 @@
     transition: transform 0.8s ease, 0.5s ease, opacity 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05);
 }
 
-.appear-info-card {
+.advanced-timeline .appear-info-card {
     opacity: 1;
     transform: translateX(-220px);
 }
@@ -445,6 +445,7 @@
 
 
 .horizontal-subdivision .zoomPopup {
+    display: none;
     width: 120px;
     background-color: gray;
     color: #fff;
@@ -502,4 +503,47 @@
     opacity: 1;
     transform: perspective(200px) translateZ(0px);
     pointer-events: auto;
+}
+
+.horizontal-advanced-timeline .info-card {
+    margin-left: -40px;
+    height: 70px;
+    width: 200px;
+    border: 2px solid #283574;
+    background-color: #ffffff;
+    margin-top: -60px;
+    padding: 5px 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+    opacity: 0;
+    display: flex;
+    margin-top: -430px;
+    position: absolute;
+    transition: transform 0.8s ease, 0.5s ease, opacity 0.2s cubic-bezier(0.6, -0.28, 0.74, 0.05);
+}
+
+.horizontal-advanced-timeline .appear-info-card {
+    opacity: 1;
+    transform: translateY(300px);
+}
+
+.horizontal-advanced-timeline .wrapper-point {
+    box-shadow: 100px 0.5px 0px -17.5px #283574;
+    height: 43px;
+    width: 136px;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    transform-origin: center;
+    transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
+}
+
+.horizontal-advanced-timeline .wrapper-point-visible {
+    display: block;
+    transform: scale(1.2);
+    pointer-events: none;
+    box-shadow: 100px 3px 0px -16px #283574;
 }

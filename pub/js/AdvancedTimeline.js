@@ -98,7 +98,7 @@ function createTimeline (domElement='body', horizontal=false, backgroundColor='w
     self.horizontal = (horizontal === true) ? true : false;
     const [point, pointHTML] = createPoint(self, startTitle, startInfo);
     self.timeline.points[point.id] = point;
-    const [pointEnd, pointEndHTML] = createPoint(self, endTitle, endInfo);
+    const [pointEnd, pointEndHTML] = createPoint(self, endTitle, endInfo, true);
     self.timeline.points[pointEnd.id] = pointEnd;
     const [subDivision, subDivisionHtml] = createSubDivision(self);
     self.timeline.points[point.id] = point;
@@ -181,11 +181,19 @@ function createSubPoint(pointId = null, frontInfo="Click to see more information
     return subPoint.id;
 }
 
-function createPoint(self, title = 'point', info="N/A") {
+function createPoint(self, title = 'point', info="N/A", end=false) {
     const point = new Point(self, title);
     const [infoCard, infoCardHtml] = createInfoCard(point.id, info);
     point.infoCard = infoCard;
-    const pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><span class='zoomPopup'>Click Me!</span><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
+    let pointHtml;
+
+    if(end){
+        pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}' style='box-shadow: none;'><span class='zoomPopup'>Click Me!</span><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
+    
+    }
+    else {
+        pointHtml = `<div class='wrapper-point' id='wrapper-${point.id}'><span class='zoomPopup'>Click Me!</span><input type='text' id='${point.id}' class='point' value='${point.title}' readonly>${infoCardHtml}</div>`;
+    }
     return [point, pointHtml];
 }
 
@@ -470,8 +478,10 @@ function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active) {
     if (active) {
         if(self.horizontal){
             $(`#${self.timeline.id} #${subDivisionId}`).css({'width': self.timeline.subDivisions[`${subDivisionId}`].width,
-            'margin-right': self.timeline.subDivisions[`${subDivisionId}`].marginRight, 'margin-left': self.timeline.subDivisions[`${subDivisionId}`].marginLeft});
+            'margin-right': self.timeline.subDivisions[`${subDivisionId}`].marginRight});
+            //, 'margin-left': self.timeline.subDivisions[`${subDivisionId}`].marginLeft});
             $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+            $(`#${self.timeline.id} #${subDivisionId}`).prev().css({'margin-right': self.timeline.subDivisions[`${subDivisionId}`].marginLeft});
         }
         else{
             $(`#${self.timeline.id} #${subDivisionId}`).css({'height': self.timeline.subDivisions[`${subDivisionId}`].height,
@@ -539,7 +549,9 @@ function zoomIntoDivisionHorizontal(self, event) {
     $(`#${self.timeline.id} .horizontal-subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
     $(`#${self.timeline.id} #${event.target.id}`).prop("disabled", false);
     $(`#${self.timeline.id} #${event.target.id}`).css({'width': self.timeline.subDivisions[`${event.target.id}`].width,
-        'margin-right': self.timeline.subDivisions[`${event.target.id}`].marginRight, 'margin-left': self.timeline.subDivisions[`${event.target.id}`].marginLeft});
+        'margin-right': self.timeline.subDivisions[`${event.target.id}`].marginRight,  'margin-left': '0px'});
+        //, 'margin-left': self.timeline.subDivisions[`${event.target.id}`].marginLeft});
+    prevDiv.css({'margin-right': self.timeline.subDivisions[`${event.target.id}`].marginLeft});
     $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
     $(`#${self.timeline.id} #${event.target.id} .zoomPopup`).css({'display': 'none'});
     $(`#${self.timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
@@ -602,7 +614,9 @@ function zoomOutOfDivisionHorizontal(self, id) {
     $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass('horizontal-subdivision-zoom', false);
     $(`#${self.timeline.id} .horizontal-subdivision`).prop("disabled", false);
     $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
-    $(`#${self.timeline.id} #${id}`).css({'width': '', 'margin-right':'' , 'margin-left':''})
+    $(`#${self.timeline.id} #${id}`).css({'width': '', 'margin-right':'', 'margin-left': ''});
+    // , 'margin-left':''})
+    prevDiv.css({'margin-right': ''})
     $(`#${self.timeline.id} #${id} .wrapper-sub-point`).toggleClass('display-flex', false);
     $(`#${self.timeline.id} .horizontal-subdivision:not(#${id})`).toggleClass("cursor-not-allowed", false);
     $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'visible'});
