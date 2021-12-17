@@ -130,7 +130,7 @@ function createNewPoint(pointTitle='Point', info="No Information") {
     return point.id;
 }
 
-function createSubPoint(pointId = null, frontInfo="Click to see more information", backInfo="No information available") {
+function createSubPoint(pointId = null, frontInfo="Click to see more information", backHeader="") {
     const self = this;
     let subDivisionId;
     let active = false;
@@ -147,7 +147,7 @@ function createSubPoint(pointId = null, frontInfo="Click to see more information
 
     const subPoint = new SubPoint(self, subDivisionId);
 
-    const [infoCard, infoCardHtml] = createSubInfoCard(subPoint.id, frontInfo, backInfo);
+    const [infoCard, infoCardHtml] = createSubInfoCard(subPoint.id, frontInfo, backHeader);
 
     subPoint.infoCard = infoCard;
 
@@ -184,15 +184,15 @@ function createInfoCard(pointId, info="N/A") {
     return [infoCard, infoCardHtml];
 }
 
-function createSubInfoCard(subPointId, frontInfo="Click to see more information", backInfo="No information available") {
-    const infoCard = new SubInfoCard(subPointId, frontInfo, backInfo);
+function createSubInfoCard(subPointId, frontInfo="Click to see more information", backHeader="") {
+    const infoCard = new SubInfoCard(subPointId, frontInfo, backHeader);
     const infoCardHtml = `<div class='sub-info-card' id='${infoCard.id}'>
                             <div class='sub-info-card-inner' id='inner-${infoCard.id}'>
                                 <div class='sub-info-card-front' id='front-${infoCard.id}'>
                                     <p class='sub-info-card-front-text'>${infoCard.frontValue}<p>
                                 </div>
                                 <div class='sub-info-card-back focused-info-card' id='back-${infoCard.id}'>
-                                    <h2 class='back-header'>Click me to go back</h2>
+                                    <h2 class='back-header'>${backHeader}</h2>
                                     <div class='close-btn' id='close-btn-back-${infoCard.id}'>X</div>
                                     <div class='info-textbox' id='elements-${infoCard.id}'></div>
                                 </div>
