@@ -14,7 +14,8 @@ AdvancedTimeline.prototype = {
     makeSubPoint: createSubPoint,
     addAudioToSubPoint: createAudioelement,
     addTextElementToSubPoint: createTextElement,
-    addImageElementToSubPoint: createImageElement
+    addImageElementToSubPoint: createImageElement,
+    addVideoElementToSubPoint: createVideoElement
 }
 
 class Timeline {
@@ -322,6 +323,45 @@ function createImageElement(subPointId, imageSrc, top='', left='', right='', bot
 
 }
 
+function createVideoElement(subPointId, videoSrc, webpageSrc=false, top='', left='', right='', bottom='', styles={}) {
+    if(!videoSrc || !subPointId){
+        return;
+    }
+
+    const self = this;
+    const subDivisionId = $(`#${self.timeline.id} #${subPointId}`).closest('.subdivision')[0].id
+    const subInfoCardId = $(`#${self.timeline.id} #${subPointId} .sub-info-card`)[0].id;
+    const elementsLength = (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements).length + 1)
+    const elementDivId = $(`#${self.timeline.id} #${subPointId} .sub-info-card-back .info-textbox`)[0].id;
+
+    const video = {
+        id: 'element-' + elementsLength + '-' + subInfoCardId,
+        src: videoSrc
+    };
+
+    self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements[video.id] = video;
+
+    let positions = '';
+
+    if(typeof top === 'number'){
+        positions += ('top: ' + top + 'px;')
+    }
+    if(typeof left === 'number'){
+        positions += ('left: ' + left + 'px;')
+    }
+    if(typeof right === 'number'){
+        positions += ('right: ' + right + 'px;')
+    }
+    if(typeof bottom === 'number'){
+        positions += ('bottom: ' + bottom + 'px;')
+    }
+
+
+
+    addVideoElement(self, video, elementDivId, positions, styles, webpageSrc);
+
+}
+
 //DOM manipulating functions
 function addAudioElement(self, audio, elementDivId, positions, styles) {
     const audioHTML = `<div style='display: inline-flex;height: fit-content;${(positions ? 'position: absolute;' + positions : '')}'>
@@ -360,6 +400,28 @@ function addImageElement(self, image, elementDivId, positions, styles) {
 
     if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
         $(`#${self.timeline.id} #${elementDivId} #${image.id}`).css(styles)
+    }
+}
+
+function addVideoElement(self, video, elementDivId, positions, styles, webpageSrc) {
+
+    let videoHTML;
+
+    if(webpageSrc === true) {
+        videoHTML = `<iframe id='${video.id}' src='${video.src}' style='${(positions ? 'position: absolute;' + positions : '')}' frameborder='0' allowfullscreen>`
+    }
+    else {
+        videoHTML = `<video id='${video.id}' style='${(positions ? 'position: absolute;' + positions : '')}' controls>
+            <source src='${video.src}' type="video/mp4">
+        </video>`
+    }
+
+    self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', videoHTML);
+    $(`#${self.timeline.id} #${elementDivId} #${video.id}`).css({ width: '140px', height: '100px'})
+   
+
+    if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
+        $(`#${self.timeline.id} #${elementDivId} #${video.id}`).css(styles)
     }
 }
 
