@@ -120,7 +120,7 @@
         return [point.id, pointEnd.id];
     }
 
-    function createNewPoint(pointTitle='Point', info="No Information") {
+    function createNewPoint(pointTitle='Point', info="No Information", pointStyle={}, divisionStyle={}) {
         const self = this;
         if (!self.timeline || self.activeSubDivion) return;
 
@@ -132,12 +132,12 @@
         self.timeline.points[point.id] = point;
         self.timeline.subDivisions[subDivision.id] = subDivision;
 
-        addNewPointToTimeline(self, pointHTML, subDivisionHtml);
+        addNewPointToTimeline(self, pointHTML, subDivisionHtml, point.id, subDivision.id, pointStyle, divisionStyle);
 
         return point.id;
     }
 
-    function createSubPoint(pointId = null, frontInfo="Click to see more information", backHeader="") {
+    function createSubPoint(pointId = null, frontInfo="Click to see more information", backHeader="", style={}) {
         const self = this;
         let subDivisionId;
         let active = false;
@@ -179,7 +179,7 @@
         const overlay =`<div class='overlay' style="background-color: ${self.timeline.backgroundColor};"></div>`
         const subPointHtml = `<div class='wrapper-sub-point' id='wrapper-${subPoint.id}'><div class='sub-point' id='${subPoint.id}'>${overlay}${infoCardHtml}</div></div>`;
 
-        addNewSubPointToTimeline(self, subPointHtml, subDivisionId, active);
+        addNewSubPointToTimeline(self, subPointHtml, subDivisionId, active, subPoint.id, style);
 
         return subPoint.id;
     }
@@ -475,12 +475,18 @@
         body.insertAdjacentHTML('beforeend', newTimeline);
     }
 
-    function addNewPointToTimeline(self, pointHTML, subDivisionHtml) {
+    function addNewPointToTimeline(self, pointHTML, subDivisionHtml, pointID, divisionID, pointStyle={}, divisionStyle={}) {
         self.pointEndElement.insertAdjacentHTML('beforebegin', pointHTML);
         self.pointEndElement.insertAdjacentHTML('beforebegin', subDivisionHtml);
+        if((typeof pointStyle === 'object') && (Object.keys(pointStyle).length !== 0)) {
+            $(`#${self.timeline.id} #${pointID} `).css(pointStyle)
+        }
+        if((typeof divisionStyle === 'object') && (Object.keys(divisionStyle).length !== 0)) {
+            $(`#${self.timeline.id} #${divisionID} `).css(divisionStyle);
+        }
     }
 
-    function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active) {
+    function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active, subPointId, style={}) {
         self.timelineElement.querySelector(`#${subDivisionId}`).insertAdjacentHTML('beforeend', subPointHTML);
         if (active) {
             if(self.horizontal){
@@ -494,6 +500,9 @@
                 'margin-bottom': self.timeline.subDivisions[`${subDivisionId}`].marginBottom});
                 $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
             }
+        }
+        if((typeof style === 'object') && (Object.keys(style).length !== 0)) {
+            $(`#${self.timeline.id} #${subDivisionId} #${subPointId} `).css(style);
         }
     }
 

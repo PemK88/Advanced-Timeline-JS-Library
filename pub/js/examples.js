@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text
 const timeline1 = new AdvancedTimeline();
 
 const [setup, end] = timeline1.makeTimeline('#container1', true, 'gainsboro',  "SETUP", "FINISHED", '2-3 Months Before Active Event', 'Event Completed!',)
-const promote = timeline1.makeNewPoint("PROMOTE", '4-5 Weeks Before Active Event')
+const promote = timeline1.makeNewPoint("PROMOTE", '4-5 Weeks Before Active Event', {'background-color': 'green', '--box-shadow-color': 'darkgreen'}, {'background-color': 'red', '--box-shadow-color': 'darkred'})
 const remind = timeline1.makeNewPoint("REMIND",'1-7 Days Before Active Event') 
 const inspire = timeline1.makeNewPoint('INSPIRE', "LIVE Day of Active Event")
 const thank = timeline1.makeNewPoint('THANK', "1-3 Days of Active Event") 
@@ -21,7 +21,7 @@ timeline1.addImageElementToSubPoint(point1, '../Nonprofit-Fundraising-Timeline.p
 timeline1.addVideoElementToSubPoint(point1, '../video-1596638300.mp4');
 timeline1.addVideoElementToSubPoint(point1, 'https://www.youtube.com/embed/WMweEpGlu_U', true);
 timeline1.addVideoElementToSubPoint(point1, '../video-1596638300.mp4',false ,'', '', '', '', {width: '200px'});
-timeline1.makeSubPoint(setup, "Goal 2 (click to see more information)", "Prepare Peer-to-peer fundraising sign-up form")
+timeline1.makeSubPoint(setup, "Goal 2 (click to see more information)", "Prepare Peer-to-peer fundraising sign-up form", {'background-color': 'pink', '--box-shadow-color': 'blue'})
 timeline1.makeSubPoint(setup, "Goal 3 (click to see more information)", "Mobile number verification")
 timeline1.makeSubPoint(setup, "Goal 4 (click to see more information)", "Text-to keywords and short links for social sharing")
 timeline1.makeSubPoint(setup, "Goal 5 (click to see more information)", "Participant and donor email confirmations")

@@ -35,10 +35,11 @@
     outline: none;
     cursor: pointer;
     transition: 0.5s ease;
+    --box-shadow-color: #99a0c5;
 }
 
 .point:hover {
-    box-shadow: 0px 0px 2px 4px #99a0c5;
+    box-shadow: 0px 0px 2px 4px var(--box-shadow-color);
 }
 
 .subdivision {
@@ -53,6 +54,11 @@
     padding-top: 25px;
     padding-bottom: 14px;
     cursor: pointer;
+    --box-shadow-color: #6179ff;
+}
+
+.subdivision:hover {
+    box-shadow: 0px 3px 2px 4px var(--box-shadow-color);
 }
 
 .subdivision-zoom {
@@ -94,10 +100,11 @@
     margin-left: -5px;
     border: 2px solid #283574;
     cursor: pointer;
+    --box-shadow-color: #6179ff;
 }
 
 .sub-point:hover {
-    box-shadow: 0px 0px 2px 2px #6179ff;
+    box-shadow: 0px 0px 2px 2px var(--box-shadow-color);
 }
 
 .wrapper-sub-point {
@@ -137,7 +144,7 @@
 }
 
 .sub-info-card-front:hover {
-    box-shadow: 0px 0px 2px 2px #a78dd7;
+    box-shadow: 0px 0px 2px 2px #99a0c5;
 }
 
 .info-card-front-text {
@@ -181,7 +188,7 @@
 .sub-info-card-back {
     display: flex;
     border: 2px solid #283574;
-    background-color: #9cd13a;
+    background-color: #8e98ce;
     padding: 5px 10px;
     font-size: 11px;
     text-align: center;
@@ -259,8 +266,8 @@
 }
 
 .info-textbox {
-    background: rgb(187, 227, 141);
-    border: 1px solid rgb(85, 139, 22);
+    background: #979ec9;
+    border: 1px solid #6f78a9;
     border-radius: 5px;
     margin: auto;
     height: 90%;
@@ -312,10 +319,6 @@
     border-width: 6px;
     border-style: solid;
     border-color: transparent gray transparent transparent;
-  }
-
-  .subdivision:hover {
-    box-shadow: 0px 3px 2px 4px #6179ff;
   }
 
   .subdivision:nth-child(2) .zoomPopup {
@@ -434,9 +437,11 @@
     padding-right: 14px;
     cursor: pointer;
     margin-left: 2px;
+    --box-shadow-color: #6179ff;
 }
+
 .horizontal-subdivision:hover {
-    box-shadow: 4px 0px 2px 4px #6179ff;
+    box-shadow: 4px 0px 2px 4px var(--box-shadow-color);
 }
 
 
