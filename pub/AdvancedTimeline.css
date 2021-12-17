@@ -60,9 +60,6 @@
     margin-top: 5px;
     margin-bottom: 235px;
 }
-/* .subdivision-zoom:hover {
-    box-shadow: none;
-  } */
 
 .wrapper-point {
     height: 43px;
@@ -106,6 +103,7 @@
 .wrapper-sub-point {
     display: none;
     width: fit-content;
+    align-items: center;
 }
 
 .display-flex {
@@ -127,7 +125,7 @@
     transition: transform 0.5s ease, 0.5s ease, opacity 0.2s cubic-bezier(0.4, 0, 1, 1);
 }
 
-.wrapper-sub-point:nth-of-type(2n) .sub-info-card{
+.subdivision .wrapper-sub-point:nth-of-type(2n) .sub-info-card{
     margin-left: -200px;
 }
 
@@ -406,3 +404,102 @@
     font-size: 9px;
     text-align: left;
   }
+
+
+  /*Horizontal classes*/
+
+.horizontal-wrapper-advanced-timeline {
+    overflow-x: scroll;
+    height: 655px;
+    position: relative;
+    display: flex;
+}
+
+.horizontal-advanced-timeline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    margin: auto;
+    height: 100%;
+}
+
+.horizontal-subdivision {
+    display: flex;
+    flex-direction: row;
+    height: 8px;
+    width: 250px;
+    background: #283474;
+    transform-origin: center top;
+    transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
+    gap: 80px;
+    padding-left: 72px;
+    padding-right: 14px;
+    cursor: pointer;
+    margin-left: 2px;
+}
+.horizontal-subdivision:hover {
+    box-shadow: 4px 0px 2px 4px #6179ff;
+}
+
+
+.horizontal-subdivision .zoomPopup {
+    width: 120px;
+    background-color: gray;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    margin-left: 60px;
+    margin-top: -55px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px grey solid;
+    transition: visibility 0.2s cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  .horizontal-subdivision .zoomPopup::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 60%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: gray transparent transparent transparent;
+  }
+
+  .horizontal-subdivision:nth-child(2) .zoomPopup {
+    display: block;
+  }
+
+  .horizontal-subdivision-zoom {
+    transform: scale(1.8);
+    margin-left: 155px;
+}
+
+.horizontal-subdivision .sub-info-card {
+    margin-left: -65px;
+    height: 60px;
+    width: 150px;
+    background-color: transparent;
+    margin-top: -100px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transform: perspective(200px) translateZ(-100px);
+    transition: transform 0.5s ease, 0.5s ease, opacity 0.2s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.horizontal-subdivision .wrapper-sub-point:nth-of-type(2n) .sub-info-card {
+    margin-top: 50px;
+}
+
+.horizontal-subdivision .appear-sub-info-card {
+    opacity: 1;
+    transform: perspective(200px) translateZ(0px);
+    pointer-events: auto;
+}

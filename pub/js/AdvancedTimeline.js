@@ -6,6 +6,7 @@ function AdvancedTimeline() {
     this.timelineWrapperElement = null;
     this.activeSubDivion = null;
     this.pointEndElement = null;
+    this.horizontal = false;
 }
 
 AdvancedTimeline.prototype = {
@@ -42,7 +43,10 @@ class SubDivision {
         this.id = 'sub-division-' + (Object.keys(self.timeline.subDivisions).length + 1);
         this.subPoints = {};
         this.height = '250px';
+        this.width = '250px';
         this.marginBottom = '235px';
+        this.marginRight = '140px'
+        this.marginLeft = '155px'
         this.backgroundColor = null;
     }
 }
@@ -83,7 +87,7 @@ function isColor(strColor){
     return s.color == strColor;
   }
 
-function createTimeline (domElement='body', backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A") {
+function createTimeline (domElement='body', horizontal=false, backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A") {
     const self = this;
     if(!isColor(backgroundColor)) {
         backgroundColor = 'white';
@@ -91,6 +95,7 @@ function createTimeline (domElement='body', backgroundColor='white', startTitle=
 
     if (self.timeline) return;
     self.timeline = new Timeline(backgroundColor);
+    self.horizontal = (horizontal === true) ? true : false;
     const [point, pointHTML] = createPoint(self, startTitle, startInfo);
     self.timeline.points[point.id] = point;
     const [pointEnd, pointEndHTML] = createPoint(self, endTitle, endInfo);
@@ -98,8 +103,9 @@ function createTimeline (domElement='body', backgroundColor='white', startTitle=
     const [subDivision, subDivisionHtml] = createSubDivision(self);
     self.timeline.points[point.id] = point;
     self.timeline.subDivisions[subDivision.id] = subDivision;
+    
 
-    addTimelineToDocument(domElement, self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
+    addTimelineToDocument(self, domElement, self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
 
     self.timelineElement = document.querySelector(`#${self.timeline.id}`);
     self.timelineElement.addEventListener('change', (event) => {changeListener(self, event)});
@@ -155,10 +161,16 @@ function createSubPoint(pointId = null, frontInfo="Click to see more information
 
     const numSubPoints = Object.keys(self.timeline.subDivisions[subDivisionId].subPoints).length;
 
-    if (numSubPoints > 6) {
+    if (!self.horizontal && numSubPoints > 6) {
         self.timeline.subDivisions[subDivisionId].height = 250 + ((numSubPoints-6) * 45);
         self.timeline.subDivisions[subDivisionId].marginBottom = 235 + ((numSubPoints-6) * 36);
         self.timelineWrapperElement.style.height = (653 + ((numSubPoints-6) * 118)) + 'px';
+    }
+    else if(self.horizontal && numSubPoints > 3) {
+        self.timeline.subDivisions[subDivisionId].width = 250 + ((numSubPoints-3) * 100);
+        self.timeline.subDivisions[subDivisionId].marginRight = 140 + ((numSubPoints-3) * 43) - 2*(numSubPoints-2);
+        self.timeline.subDivisions[subDivisionId].marginLeft = 155 + ((numSubPoints-3) * 40);
+        self.timelineWrapperElement.style.width = (1058 + ((numSubPoints-3) * 200)) + 'px';
     }
 
     const overlay =`<div class='overlay' style="background-color: ${self.timeline.backgroundColor};"></div>`
@@ -205,7 +217,13 @@ function createSubInfoCard(subPointId, frontInfo="Click to see more information"
 
 function createSubDivision(self) {
     const subDivision = new SubDivision(self);
-    const subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'><span class='zoomPopup'>Zoom In</span></div>`;
+    let subDivisionHtml;
+    if(self.horizontal){
+        subDivisionHtml = `<div id='${subDivision.id}' class='horizontal-subdivision'><span class='zoomPopup'>Zoom In</span></div>`;
+    }
+    else{
+        subDivisionHtml = `<div id='${subDivision.id}' class='subdivision'><span class='zoomPopup'>Zoom In</span></div>`;
+    }
     return [subDivision, subDivisionHtml];
 }
 
@@ -425,10 +443,20 @@ function addVideoElement(self, video, elementDivId, positions, styles, webpageSr
     }
 }
 
-function addTimelineToDocument(domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
+function addTimelineToDocument(self, domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
     const body = document.querySelector(`${domElement}`);
-    const newTimeline = `<div id='${wrapperId}' class='wrapper-advanced-timeline'>
+    let newTimeline;
+
+    if(self.horizontal){
+        newTimeline = `<div id='${wrapperId}' class='horizontal-wrapper-advanced-timeline'>
+        <ul id='${timelineId}' class='horizontal-advanced-timeline'>` + pointHTML + subDivisionHtml + pointEndHTML +'</ul></div>';
+    }
+    else {
+        newTimeline = `<div id='${wrapperId}' class='wrapper-advanced-timeline'>
         <ul id='${timelineId}' class='advanced-timeline'>` + pointHTML + subDivisionHtml + pointEndHTML +'</ul></div>';
+    
+    }
+   
     body.insertAdjacentHTML('beforeend', newTimeline);
 }
 
@@ -440,9 +468,16 @@ function addNewPointToTimeline(self, pointHTML, subDivisionHtml) {
 function addNewSubPointToTimeline(self, subPointHTML, subDivisionId, active) {
     self.timelineElement.querySelector(`#${subDivisionId}`).insertAdjacentHTML('beforeend', subPointHTML);
     if (active) {
-        $(`#${self.timeline.id} #${subDivisionId}`).css({'height': self.timeline.subDivisions[`${subDivisionId}`].height,
+        if(self.horizontal){
+            $(`#${self.timeline.id} #${subDivisionId}`).css({'width': self.timeline.subDivisions[`${subDivisionId}`].width,
+            'margin-right': self.timeline.subDivisions[`${subDivisionId}`].marginRight, 'margin-left': self.timeline.subDivisions[`${subDivisionId}`].marginLeft});
+            $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+        }
+        else{
+            $(`#${self.timeline.id} #${subDivisionId}`).css({'height': self.timeline.subDivisions[`${subDivisionId}`].height,
             'margin-bottom': self.timeline.subDivisions[`${subDivisionId}`].marginBottom});
-        $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+            $(`#${self.timeline.id} #${subDivisionId} .wrapper-sub-point`).toggleClass('display-flex', true);
+        }
     }
 }
 
@@ -457,9 +492,9 @@ function zoomIntoDivision(self, event) {
     $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'hidden'});
     $(`#${self.timeline.id} .wrapper-point`).prop("disabled", true);
 
+    $(`#${self.timeline.id} .subdivision`).css({'box-shadow': 'none'});
     $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', true);
     $(`#${self.timeline.id} .subdivision`).prop("disabled", true);
-    $(`#${self.timeline.id} .subdivision`).css({'box-shadow': 'none'});
     $(`#${self.timeline.id} .subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
     $(`#${self.timeline.id} #${event.target.id}`).prop("disabled", false);
     $(`#${self.timeline.id} #${event.target.id}`).css({'height': self.timeline.subDivisions[`${event.target.id}`].height,
@@ -487,6 +522,48 @@ function zoomIntoDivision(self, event) {
 
 }
 
+
+function zoomIntoDivisionHorizontal(self, event) {
+    self.activeSubDivion = event.target.id;
+    const prevDiv = $(`#${self.timeline.id} #${event.target.id}`).prev();
+    const nextDiv = $(`#${self.timeline.id} #${event.target.id}`).next();
+    let eventFired = 0;
+    let newWidth = '800px'
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', true);
+    $(`#${self.timeline.id} .wrapper-point .info-card`).toggleClass('appear-info-card', false);
+    $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'hidden'});
+    $(`#${self.timeline.id} .wrapper-point`).prop("disabled", true);
+    $(`#${self.timeline.id} .horizontal-subdivision`).css({'box-shadow': 'none'});
+    $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass('horizontal-subdivision-zoom', true);
+    $(`#${self.timeline.id} .horizontal-subdivision`).prop("disabled", true);
+    $(`#${self.timeline.id} .horizontal-subdivision:not(#${event.target.id})`).toggleClass("cursor-not-allowed", true)
+    $(`#${self.timeline.id} #${event.target.id}`).prop("disabled", false);
+    $(`#${self.timeline.id} #${event.target.id}`).css({'width': self.timeline.subDivisions[`${event.target.id}`].width,
+        'margin-right': self.timeline.subDivisions[`${event.target.id}`].marginRight, 'margin-left': self.timeline.subDivisions[`${event.target.id}`].marginLeft});
+    $(`#${self.timeline.id} #${event.target.id} .wrapper-sub-point`).toggleClass('display-flex', true);
+    $(`#${self.timeline.id} #${event.target.id} .zoomPopup`).css({'display': 'none'});
+    $(`#${self.timeline.id} #${event.target.id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
+        () => {
+            if(eventFired) {
+                self.timelineWrapperElement.style.overflow = 'hidden';
+                self.timelineWrapperElement.style.width = newWidth;
+                return;
+            }
+            self.timelineWrapperElement.scrollTo({left: (self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetLeft - 20), behavior: 'smooth'});
+
+            //self.timelineWrapperElement.scrollTop =  self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop;
+
+            const startPoint = self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetLeft;
+            const startDiv = self.timelineElement.querySelector(`#${event.target.id}`).offsetLeft;
+            const endDiv = self.timelineElement.querySelector(`#${nextDiv[0].id}`).offsetLeft
+
+            newWidth = (startDiv + endDiv - 2*startPoint) + 'px';
+            eventFired = 1;
+        });
+
+}
+
+
 function zoomOutOfDivision(self, id) {
     self.activeSubDivion = null;
     let eventFired = 0;
@@ -499,6 +576,7 @@ function zoomOutOfDivision(self, id) {
     $(`#${self.timeline.id} #${id} .wrapper-sub-point`).toggleClass('display-flex', false);
     $(`#${self.timeline.id} .subdivision:not(#${id})`).toggleClass("cursor-not-allowed", false);
     $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'visible'});
+    
 
     //remove height
     self.timelineWrapperElement.style = '';
@@ -508,6 +586,36 @@ function zoomOutOfDivision(self, id) {
         () => {
             if(eventFired) {
                 self.timelineWrapperElement.scrollTo({top: self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetTop, behavior: 'smooth'});
+                $(`#${self.timeline.id} .subdivision`).css({'box-shadow': ''});
+                return;
+            }
+            eventFired = 1;
+        });
+}
+
+function zoomOutOfDivisionHorizontal(self, id) {
+    self.activeSubDivion = null;
+    let eventFired = 0;
+    const prevDiv = $(`#${self.timeline.id} #${id}`).prev();
+    $(`#${self.timeline.id} .horizontal-subdivision`).css({'box-shadow': ''});
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass('wrapper-point-visible', false);
+    $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass('horizontal-subdivision-zoom', false);
+    $(`#${self.timeline.id} .horizontal-subdivision`).prop("disabled", false);
+    $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
+    $(`#${self.timeline.id} #${id}`).css({'width': '', 'margin-right':'' , 'margin-left':''})
+    $(`#${self.timeline.id} #${id} .wrapper-sub-point`).toggleClass('display-flex', false);
+    $(`#${self.timeline.id} .horizontal-subdivision:not(#${id})`).toggleClass("cursor-not-allowed", false);
+    $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'visible'});
+
+    //remove height
+    self.timelineWrapperElement.style = '';
+    self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
+
+    $(`#${self.timeline.id} #${id}`).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',   
+        () => {
+            if(eventFired) {
+                self.timelineWrapperElement.scrollTo({left: self.timelineElement.querySelector(`#${prevDiv[0].id}`).offsetLeft - 10, behavior: 'smooth'});
+                $(`#${self.timeline.id} .horizontal-subdivision`).css({'box-shadow': ''});
                 return;
             }
             eventFired = 1;
@@ -567,11 +675,14 @@ function clickListener (self, event) {
     else if(event.target.className === 'subdivision' ) {  
         zoomIntoDivision(self, event); 
     }
+    else if(event.target.className === 'horizontal-subdivision' ) {  
+        zoomIntoDivisionHorizontal(self, event); 
+    }
     // else if(event.target.className === 'subdivision subdivision-zoom') {
     //     zoomOutOfDivision(self, event.target.id);
     // }
     else if(self.activeSubDivion && event.target.id === self.timeline.id){
-        zoomOutOfDivision(self, self.activeSubDivion);
+        self.horizontal ? zoomOutOfDivisionHorizontal(self, self.activeSubDivion) : zoomOutOfDivision(self, self.activeSubDivion);
     }
     else if(event.target.className === 'sub-point') {
         $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');

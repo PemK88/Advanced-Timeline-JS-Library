@@ -4,7 +4,7 @@ document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text
 
 const timeline1 = new AdvancedTimeline;
 
-const [setup, end] = timeline1.makeTimeline('#container1', 'gainsboro',  "SETUP", "FINISHED", '2-3 Months Before Active Event', 'Event Completed!',)
+const [setup, end] = timeline1.makeTimeline('#container1', false, 'gainsboro',  "SETUP", "FINISHED", '2-3 Months Before Active Event', 'Event Completed!',)
 const promote = timeline1.makeNewPoint("PROMOTE", '4-5 Weeks Before Active Event')
 const remind = timeline1.makeNewPoint("REMIND",'1-7 Days Before Active Event') 
 const inspire = timeline1.makeNewPoint('INSPIRE', "LIVE Day of Active Event")
