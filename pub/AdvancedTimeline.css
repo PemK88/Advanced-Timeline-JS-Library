@@ -278,6 +278,7 @@
     padding: 6px;
     position: relative;
     gap: 10px;
+    align-content: flex-start;
 }
 
 .back-header {
@@ -383,7 +384,7 @@
     height: 4px;
     border-radius: 0.5px;
     background: #e90707;
-    margin-top: 3.7px;
+    align-self: center;
     margin-left: 2px;
   }
 
@@ -396,4 +397,11 @@
     border-right: 6px solid #e90707;
     margin-left: -3px;
     align-self: center;
+  }
+
+  .text {
+    height: fit-content;
+    width: fit-content;
+    font-size: 9px;
+    text-align: left;
   }

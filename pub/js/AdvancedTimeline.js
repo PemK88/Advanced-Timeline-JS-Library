@@ -12,7 +12,8 @@ AdvancedTimeline.prototype = {
     makeTimeline: createTimeline,
     makeNewPoint: createNewPoint,
     makeSubPoint: createSubPoint,
-    addAudioTosubPoint: createAudioelement
+    addAudioToSubPoint: createAudioelement,
+    addTextElementToSubPoint: createTextElement
 }
 
 class Timeline {
@@ -206,7 +207,7 @@ function createSubDivision(self) {
     return [subDivision, subDivisionHtml];
 }
 
-function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left='', right='', bottom='') {
+function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left='', right='', bottom='', styles={}) {
     if(!audioSrc || !subPointId){
         return;
     }
@@ -219,8 +220,7 @@ function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left=''
     const audio = {
         id: 'element-' + elementsLength + '-' + subInfoCardId,
         src: audioSrc,
-        title: audioTitle,
-        isPlaying: false
+        title: audioTitle
     };
 
     self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements[audio.id] = audio;
@@ -240,14 +240,53 @@ function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left=''
         positions += ('bottom: ' + bottom + 'px;')
     }
 
-    addAudioElement(self, audio, elementDivId, positions);
+    addAudioElement(self, audio, elementDivId, positions, styles);
 
 }
 
+function createTextElement(subPointId, text='', top='', left='', right='', bottom='', styles={}) {
+    if(!subPointId){
+        return;
+    }
+    const self = this;
+    const subDivisionId = $(`#${self.timeline.id} #${subPointId}`).closest('.subdivision')[0].id
+    const subInfoCardId = $(`#${self.timeline.id} #${subPointId} .sub-info-card`)[0].id;
+    const elementsLength = (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements).length + 1)
+    const elementDivId = $(`#${self.timeline.id} #${subPointId} .sub-info-card-back .info-textbox`)[0].id;
+
+    const textEl = {
+        id: 'element-' + elementsLength + '-' + subInfoCardId,
+        value: text
+    };
+
+    self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements[textEl.id] = textEl;
+
+    let positions = '';
+
+    if(typeof top === 'number'){
+        positions += ('top: ' + top + 'px;')
+    }
+    if(typeof left === 'number'){
+        positions += ('left: ' + left + 'px;')
+    }
+    if(typeof right === 'number'){
+        positions += ('right: ' + right + 'px;')
+    }
+    if(typeof bottom === 'number'){
+        positions += ('bottom: ' + bottom + 'px;')
+    }
+
+
+
+    addTextElement(self, textEl, elementDivId, positions, styles);
+
+}
+
+
 //DOM manipulating functions
-function addAudioElement(self, audio, elementDivId, positions) {
+function addAudioElement(self, audio, elementDivId, positions, styles) {
     const audioHTML = `<div style='display: inline-flex;height: fit-content;${(positions ? 'position: absolute;' + positions : '')}'>
-        <h3 class='audio-title'>${audio.title}</h3>
+        <h3 class='audio-title'  id='title-${audio.id}'>${audio.title}</h3>
         <div class='audio-icon' id='${audio.id}'>
             <div class='audio-icon-square' id='square-${audio.id}'></div>
             <div class='audio-icon-triangle' id='triangle-${audio.id}'></div>
@@ -259,6 +298,20 @@ function addAudioElement(self, audio, elementDivId, positions) {
     </div>`
     
     self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', audioHTML);
+
+    if(styles !== {} && (typeof styles === 'object')) {
+        $(`#${self.timeline.id} #${elementDivId} #title-${audio.id}`).css(styles)
+    }
+}
+
+function addTextElement(self, text, elementDivId, positions, styles) {
+    const textHTML = `<div class='text' id='${text.id}' style='${(positions ? 'position: absolute;' + positions : '')}'>${text.value}</div>`
+
+    self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', textHTML);
+
+    if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
+        $(`#${self.timeline.id} #${elementDivId} #${text.id}`).css(styles)
+    }
 }
 
 function addTimelineToDocument(domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
@@ -331,7 +384,7 @@ function zoomOutOfDivision(self, id) {
     $(`#${self.timeline.id} .subdivision`).toggleClass('subdivision-zoom', false);
     $(`#${self.timeline.id} .subdivision`).prop("disabled", false);
     $(`#${self.timeline.id} .wrapper-point`).prop("disabled", false);
-    $(`#${self.timeline.id} #${id}`).removeAttr("style");
+    $(`#${self.timeline.id} #${id}`).css({'height': '', 'margin-bottom':''})
     $(`#${self.timeline.id} #${id} .wrapper-sub-point`).toggleClass('display-flex', false);
     $(`#${self.timeline.id} .subdivision:not(#${id})`).toggleClass("cursor-not-allowed", false);
     $(`#${self.timeline.id} .wrapper-point .zoomPopup`).first().css({'visibility': 'visible'});
