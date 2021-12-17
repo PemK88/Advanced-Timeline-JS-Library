@@ -203,10 +203,6 @@
     display: block;
 }
 
-.cursor-not-allowed {
-    cursor: not-allowed;
-}
-
 .advanced-timeline .overlay {
     width: 7000%;
     height: 120%;
@@ -562,4 +558,8 @@
 
 .horizontal-advanced-timeline .wrapper-sub-point:nth-of-type(2n) .focused-info-card {
     margin-top: -185px;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
 }
