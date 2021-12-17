@@ -13,7 +13,8 @@ AdvancedTimeline.prototype = {
     makeNewPoint: createNewPoint,
     makeSubPoint: createSubPoint,
     addAudioToSubPoint: createAudioelement,
-    addTextElementToSubPoint: createTextElement
+    addTextElementToSubPoint: createTextElement,
+    addImageElementToSubPoint: createImageElement
 }
 
 class Timeline {
@@ -282,6 +283,44 @@ function createTextElement(subPointId, text='', top='', left='', right='', botto
 
 }
 
+function createImageElement(subPointId, imageSrc, top='', left='', right='', bottom='', styles={}) {
+    if(!imageSrc || !subPointId){
+        return;
+    }
+
+    const self = this;
+    const subDivisionId = $(`#${self.timeline.id} #${subPointId}`).closest('.subdivision')[0].id
+    const subInfoCardId = $(`#${self.timeline.id} #${subPointId} .sub-info-card`)[0].id;
+    const elementsLength = (Object.keys(self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements).length + 1)
+    const elementDivId = $(`#${self.timeline.id} #${subPointId} .sub-info-card-back .info-textbox`)[0].id;
+
+    const image = {
+        id: 'element-' + elementsLength + '-' + subInfoCardId,
+        src: imageSrc
+    };
+
+    self.timeline.subDivisions[subDivisionId].subPoints[subPointId].infoCard.elements[image.id] = image;
+
+    let positions = '';
+
+    if(typeof top === 'number'){
+        positions += ('top: ' + top + 'px;')
+    }
+    if(typeof left === 'number'){
+        positions += ('left: ' + left + 'px;')
+    }
+    if(typeof right === 'number'){
+        positions += ('right: ' + right + 'px;')
+    }
+    if(typeof bottom === 'number'){
+        positions += ('bottom: ' + bottom + 'px;')
+    }
+
+
+
+    addImageElement(self, image, elementDivId, positions, styles);
+
+}
 
 //DOM manipulating functions
 function addAudioElement(self, audio, elementDivId, positions, styles) {
@@ -311,6 +350,16 @@ function addTextElement(self, text, elementDivId, positions, styles) {
 
     if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
         $(`#${self.timeline.id} #${elementDivId} #${text.id}`).css(styles)
+    }
+}
+
+function addImageElement(self, image, elementDivId, positions, styles) {
+    const imageHTML = `<img src='${image.src}' alt='element' id='${image.id}' style='${(positions ? 'position: absolute;' + positions : '')}'/>`
+
+    self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', imageHTML);
+
+    if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
+        $(`#${self.timeline.id} #${elementDivId} #${image.id}`).css(styles)
     }
 }
 

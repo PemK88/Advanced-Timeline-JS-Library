@@ -16,6 +16,8 @@ timeline1.addAudioToSubPoint(point1, '../bts_butter_feat_megan_thee_stallion_off
 timeline1.addTextElementToSubPoint(point1, 'what a lovely day it is today')
 timeline1.addAudioToSubPoint(point1, '../bts_butter_feat_megan_thee_stallion_official_visualizer_-1736450934529516850.mp3', "Butter", '', '60', '', 20, {color: 'blue', 'font-size': '15px'})
 timeline1.addTextElementToSubPoint(point1, 'what a lovely day it is today', 50, 20, '', '', {'width': '15px', color: 'green'})
+timeline1.addImageElementToSubPoint(point1, '../Nonprofit-Fundraising-Timeline.png', '','','','', {width: '30px', height: '50px'})
+timeline1.addImageElementToSubPoint(point1, '../Nonprofit-Fundraising-Timeline.png', '','','','', {width: '60px'})
 timeline1.makeSubPoint(setup, "Goal 2 (click to see more information)", "Prepare Peer-to-peer fundraising sign-up form")
 timeline1.makeSubPoint(setup, "Goal 3 (click to see more information)", "Mobile number verification")
 timeline1.makeSubPoint(setup, "Goal 4 (click to see more information)", "Text-to keywords and short links for social sharing")
