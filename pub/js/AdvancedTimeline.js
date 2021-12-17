@@ -89,7 +89,7 @@
         return s.color == strColor;
     }
 
-    function createTimeline (domElement='body', horizontal=false, backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A") {
+    function createTimeline (domElement='body', horizontal=false, backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A",  startPointStyle={}, startDivisionStyle={}, endPointStyle={}) {
         const self = this;
         if(!isColor(backgroundColor)) {
             backgroundColor = 'white';
@@ -107,14 +107,13 @@
         self.timeline.subDivisions[subDivision.id] = subDivision;
         
 
-        addTimelineToDocument(self, domElement, self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml);
+        addTimelineToDocument(self, domElement, self.timeline.id, self.timeline.wrapperId, pointHTML, pointEndHTML, subDivisionHtml, point.id, pointEnd.id, subDivision.id, startPointStyle, startDivisionStyle, endPointStyle);
 
         self.timelineElement = document.querySelector(`#${self.timeline.id}`);
         self.timelineElement.addEventListener('click', (event) => {clickListener(self, event)});
 
         self.timelineWrapperElement = document.querySelector(`#${self.timeline.wrapperId}`);
         self.pointEndElement = self.timelineElement.querySelector('#wrapper-point-2');
-        self.pointEndElement.querySelector('.point').style.backgroundColor = "#e54646";
         self.timelineWrapperElement.style.backgroundColor = self.timeline.backgroundColor;
 
         return [point.id, pointEnd.id];
@@ -458,7 +457,7 @@
         }
     }
 
-    function addTimelineToDocument(self, domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml) {
+    function addTimelineToDocument(self, domElement, timelineId, wrapperId, pointHTML, pointEndHTML, subDivisionHtml, startPointId, endPointId, divisionId, startPointStyle={}, startDivisionStyle={}, endPointStyle={}) {
         const body = document.querySelector(`${domElement}`);
         let newTimeline;
 
@@ -473,6 +472,18 @@
         }
     
         body.insertAdjacentHTML('beforeend', newTimeline);
+
+        if((typeof startPointStyle === 'object') && (Object.keys(startPointStyle).length !== 0)) {
+            $(`#${timelineId} #${startPointId}`).css(startPointStyle)
+        }
+
+        if((typeof startDivisionStyle === 'object') && (Object.keys(startDivisionStyle).length !== 0)) {
+            $(`#${timelineId} #${divisionId}`).css(startDivisionStyle)
+        }
+
+        if((typeof endPointStyle === 'object') && (Object.keys(endPointStyle).length !== 0)) {
+            $(`#${timelineId} #${endPointId}`).css(endPointStyle)
+        }
     }
 
     function addNewPointToTimeline(self, pointHTML, subDivisionHtml, pointID, divisionID, pointStyle={}, divisionStyle={}) {
