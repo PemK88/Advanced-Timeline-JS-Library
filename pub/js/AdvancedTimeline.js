@@ -674,7 +674,7 @@ function displayFrontSubInfoCard(self, id) {
 function displayBackSubInfoCardHorizontal(self, event) {
     const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
     const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
-    $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-left': (-(pointIdx)*67) +'px'});
+    $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-left': ((pointIdx-1)*(-67)) +'px'});
 
     //display overlay
     $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block',
@@ -685,6 +685,7 @@ function displayBackSubInfoCardHorizontal(self, event) {
     $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass("disappear", true);
     $(`#${self.timeline.id} #${parentDivId}`).toggleClass("disappear", false);
     $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
+
 }
 
 function displayFrontSubInfoCardHorizontal(self, id) {
