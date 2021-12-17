@@ -671,6 +671,43 @@ function displayFrontSubInfoCard(self, id) {
     $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
 }
 
+function displayBackSubInfoCardHorizontal(self, event) {
+    const pointIdx = $(`#${self.timeline.id} #${event.target.id}`).closest('.wrapper-sub-point').index();
+    const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').parent().parent().parent()[0].id;
+    $(`#${self.timeline.id} #${event.target.id}`).next().css({'margin-left': (-(pointIdx)*67) +'px'});
+
+    //display overlay
+    $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').prev().css({'display': 'block',
+        'width': `${self.timelineWrapperElement.offsetWidth}px`, 'height': `${self.timelineWrapperElement.offsetHeight}px`});
+    $(`#${self.timeline.id} #${event.target.id}`).closest('.sub-info-card').css({'z-index': '501'})
+    $(`#${self.timeline.id} #${event.target.id}`).toggleClass('flip-180',true);
+    $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('flip-0',true);
+    $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass("disappear", true);
+    $(`#${self.timeline.id} #${parentDivId}`).toggleClass("disappear", false);
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", true);
+}
+
+function displayFrontSubInfoCardHorizontal(self, id) {
+    const audios = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('audio')
+    
+    audios.forEach((audio,i) => {
+        audio.pause();
+        audio.currentTime = 0;
+    })
+
+    $(`#${self.timeline.id} #${id} .info-textbox .audio-icon-triangle`).css({'border-right-color': ''})
+    $(`#${self.timeline.id} #${id} .info-textbox  .audio-icon-square`).css({'background': ''})
+        
+    $(`#${self.timeline.id} #${id}`).toggleClass('flip-0',false);
+    $(`#${self.timeline.id} #${id}`).prev().toggleClass('flip-180',false);
+    $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').removeAttr('style');
+    //remove overlay
+    $(`#${self.timeline.id} #${id}`).closest('.sub-info-card').prev().css({'display': 'none'});
+    $(`#${self.timeline.id} .horizontal-subdivision`).toggleClass("disappear", false);
+    $(`#${self.timeline.id} .wrapper-point`).toggleClass("disappear", false);
+}
+
+
 function togglePlay(self, audioId, id) {
     const audio = self.timelineElement.querySelector(`#${audioId}`)
     audio.paused ? $(`#${self.timeline.id} #${id} .audio-icon-triangle`).css({'border-right-color': '#2bb731'}) : $(`#${self.timeline.id} #${id} .audio-icon-triangle`).css({'border-right-color': ''});
@@ -702,14 +739,15 @@ function clickListener (self, event) {
         $(`#${self.timeline.id} #${event.target.id} .sub-info-card`).toggleClass('appear-sub-info-card');
     }
     else if(event.target.className === 'sub-info-card-front') {
-        displayBackSubInfoCard(self, event)
+        self.horizontal ?  displayBackSubInfoCardHorizontal(self, event) : displayBackSubInfoCard(self, event)
     }
     // else if(event.target.className === 'sub-info-card-back focused-info-card flip-0') {
     //     displayFrontSubInfoCard(self, event.target.id)
     // }
     else if(event.target.className === 'close-btn') {
         const parentDivId = $(`#${self.timeline.id} #${event.target.id}`).parent()[0].id;
-        displayFrontSubInfoCard(self, parentDivId);
+
+        self.horizontal ? displayFrontSubInfoCardHorizontal(self, parentDivId) : displayFrontSubInfoCard(self, parentDivId);
     }
     else if(event.target.className === 'point') {
         $(`#${self.timeline.id} #${event.target.id}`).next().toggleClass('appear-info-card');

@@ -207,7 +207,7 @@
     cursor: not-allowed;
 }
 
-.overlay {
+.advanced-timeline .overlay {
     width: 7000%;
     height: 120%;
     background: rgb(255, 255, 255);
@@ -227,7 +227,7 @@
     z-index: 2;
 }
 
-.wrapper-sub-point:nth-of-type(2n) .focused-info-card {
+.advanced-timeline .wrapper-sub-point:nth-of-type(2n) .focused-info-card {
     margin-left: 35px;
 }
 
@@ -464,7 +464,7 @@
     content: "";
     position: absolute;
     top: 100%;
-    right: 60%;
+    right: 45%;
     margin-left: -6px;
     border-width: 6px;
     border-style: solid;
@@ -546,4 +546,20 @@
     transform: scale(1.2);
     pointer-events: none;
     box-shadow: 100px 3px 0px -16px #283574;
+}
+
+.horizontal-advanced-timeline .overlay {
+    width: 1100px;
+    height: 660px;
+    background: rgb(255, 255, 255);
+    display: none;
+    position: absolute;
+    top: -300px;
+    left: -300px;
+    z-index: 200;
+    cursor: default;
+}
+
+.horizontal-advanced-timeline .wrapper-sub-point:nth-of-type(2n) .focused-info-card {
+    margin-top: -185px;
 }
