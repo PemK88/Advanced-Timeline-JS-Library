@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Example Timelines</title>
+        <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script defer type="text/javascript" src="js/AdvancedTimeline.js"></script>
+        <script defer type="text/javascript" src='js/timelineExample.js'></script>
+        <link rel='stylesheet' type='text/css' href='examples.css'>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik&family=Saira&display=swap" rel="stylesheet">
+        <link rel='stylesheet' type='text/css' href='AdvancedTimeline.css'>
+
+    </head>
+    <body>
+        <ul class='navbar'>
+            <li class='nav-title' style="margin-right: auto;">Advanced Timeline</li>
+            <li><a class="nav-link" href="examples.html">Home</a></li>
+            <li><a class="nav-link" href="#">Examples</a></li>
+            <li><a class="nav-link" href="#">Documentation</a></li>
+        </ul>
+        <div>
+            <div class='page-title'>Examples</div>
+            <div class='example-title'>Basic Timeline with Points</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example1'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+timeline.makeTimeline('#example1', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+timeline.makeNewPoint("Middle", 'Middle Point');
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Horizontal Timeline with Points</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example2'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+timeline.makeTimeline('#example1', true, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+timeline.makeNewPoint("Middle", 'Middle Point');
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Timeline with Subpoints</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example3'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const [startPoint, endPoint] = timeline.makeTimeline('#example3', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+
+timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+timeline.makeSubPoint(startPoint, "Point 2", "Point 2 Information");
+
+const middlePoint = timeline.makeNewPoint("Middle", 'Middle Point');
+
+timeline.makeSubPoint(middlePoint, "Point 1", "Point 1 Information");
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Styled Timeline</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example4'  style="background: rgb(64 72 105)"></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const pointStyle = {
+    'background-color': '#0bbb80',
+    '--box-shadow-color': '#29d198'
+};
+
+const subDivisionStyle = {
+    'background-color': '#0bbb80',
+    '--box-shadow-color': 'rgb(58 220 165)'
+};
+
+const subStyle = {
+    'background-color': 'rgb(11, 187, 128)',
+    '--box-shadow-color': '#29d198',
+    'border-color': '#139113'
+};
+
+const [startPoint, endPoint1] = timeline.makeTimeline('#example4', false, 'rgb(64 72 105)',  "Start", "End", 'Starting Point', 'EndPoint', pointStyle, subDivisionStyle, pointStyle);
+
+timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information", subStyle);
+timeline.makeSubPoint(startPoint, "Point 2", "Point 2 Information", subStyle);
+
+const middlePoint = timeline.makeNewPoint("Middle", 'Middle Point', pointStyle, subDivisionStyle);
+
+timeline.makeSubPoint(middlePoint, "Point 1", "Point 1 Information", subStyle);
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Subpoint Information Card with Text Elements</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example5'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const [startPoint, endPoint] = timeline.makeTimeline('#example5', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+
+//Create a regular text element
+timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint');
+
+//Style a text element
+const style = {
+    'color': 'green',
+    'font-size': '15px'
+};
+
+timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint', '', '', '', '', style);
+
+//Position a text element
+timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint', 50, 20, '', '');
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Subpoint Information Card with Image Elements</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example6'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const [startPoint, endPoint] = timeline.makeTimeline('#example6', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+
+//Create a regular image element
+timeline.addImageElementToSubPoint(subPoint, 'timeline.png');
+
+//Style an image element
+const style = {
+    'width': '60px',
+    'border': '1px solid orangered',
+    "border-radius": '5px'
+};
+
+timeline.addImageElementToSubPoint(subPoint, 'timeline.png', '', '', '', '', style);
+
+//Position an image element
+timeline.addImageElementToSubPoint(subPoint, 'timeline.png','', 40, '', 0);
+                            
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Subpoint Information Card with Audio Elements</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example7'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const [startPoint, endPoint] = timeline.makeTimeline('#example7', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+
+//Create a regular audio element
+timeline.addAudioToSubPoint(subPoint, 'piano_cover.mp3', 'Piano Cover');
+
+//Style an audio element
+const style = {
+    'color': 'blue',
+    'font-size': '15px'
+};
+
+timeline.addAudioToSubPoint(subPoint, 'piano_cover.mp3', 'Piano Cover', '', '', '', '', style);
+
+//Position an audio element
+timeline.addAudioToSubPoint(subPoint, 'piano_cover.mp3', 'Piano Cover', '', '', '', 30);
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+
+            <div class='example-title'>Subpoint Information Card with Video Elements</div>
+            <div class='example-container'>  
+                <div class='timeline-container' id='example8'></div>
+                <div class='code-container'>
+                    <pre>
+                        <code>const timeline = new AdvancedTimeline();
+
+const [startPoint, endPoint] = timeline.makeTimeline('#example8', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
+
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+
+//Create a regular video element
+timeline.addVideoElementToSubPoint(subPoint, 'Timeline.mp4');
+
+//Style a video element
+const style = {
+    'width': '150px',
+    'height': '',
+    'border': '1px solid orangered'
+};
+
+timeline.addVideoElementToSubPoint(subPoint, 'Timeline.mp4', false, '', '', '', '', style);
+
+//Add video from a different webpage (ex.youtube)
+timeline.addVideoElementToSubPoint(subPoint, 'https://www.youtube.com/embed/rTIAcCUaYsw', true, '', '', '', '');
+
+//Position a video element
+timeline.addVideoElementToSubPoint(subPoint, 'Timeline.mp4', false, '', 180, '', 30);     
+                        </code>
+                      </pre>
+                </div>
+
+            </div>
+            
+        </div>
+
+    </body>
+
+</html>

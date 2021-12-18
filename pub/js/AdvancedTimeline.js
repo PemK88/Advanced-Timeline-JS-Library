@@ -82,18 +82,8 @@
             this.elements = {}
         }
     }
-    /*https://stackoverflow.com/questions/48484767/javascript-check-if-string-is-valid-css-color*/
-    function isColor(strColor){
-        var s = new Option().style;
-        s.color = strColor;
-        return s.color == strColor;
-    }
-
     function createTimeline (domElement='body', horizontal=false, backgroundColor='white', startTitle='Start', endTitle='End', startInfo="N/A", endInfo="N/A",  startPointStyle={}, startDivisionStyle={}, endPointStyle={}) {
         const self = this;
-        if(!isColor(backgroundColor)) {
-            backgroundColor = 'white';
-        }
 
         if (self.timeline) return;
         self.timeline = new Timeline(backgroundColor);
@@ -429,6 +419,8 @@
         const imageHTML = `<img src='${image.src}' alt='element' id='${image.id}' style='${(positions ? 'position: absolute;' + positions : '')}'/>`
 
         self.timelineElement.querySelector(`#${elementDivId}`).insertAdjacentHTML('beforeend', imageHTML);
+
+        $(`#${self.timeline.id} #${elementDivId} #${image.id}`).css({ 'width': '120px'})
 
         if((typeof styles === 'object') && (Object.keys(styles).length !== 0)) {
             $(`#${self.timeline.id} #${elementDivId} #${image.id}`).css(styles)

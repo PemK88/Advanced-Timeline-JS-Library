@@ -4,7 +4,7 @@ document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text
 
 const timeline1 = new AdvancedTimeline();
 
-const [setup, end] = timeline1.makeTimeline('#container1', true, 'gainsboro',  "SETUP", "FINISHED", '2-3 Months Before Active Event', 'Event Completed!', {'background-color': 'blue', '--box-shadow-color': 'darkgreen'}, {'background-color': 'purple', '--box-shadow-color': 'pink'}, {'background-color': 'darkred', '--box-shadow-color': 'green'})
+const [setup, end] = timeline1.makeTimeline('#container1', false, 'gainsboro',  "SETUP", "FINISHED", '2-3 Months Before Active Event', 'Event Completed!', {'background-color': 'blue', '--box-shadow-color': 'darkgreen'}, {'background-color': 'purple', '--box-shadow-color': 'pink'}, {'background-color': 'darkred', '--box-shadow-color': 'green'})
 const promote = timeline1.makeNewPoint("PROMOTE", '4-5 Weeks Before Active Event', {'background-color': 'green', '--box-shadow-color': 'darkgreen'}, {'background-color': 'red', '--box-shadow-color': 'darkred'})
 const remind = timeline1.makeNewPoint("REMIND",'1-7 Days Before Active Event') 
 const inspire = timeline1.makeNewPoint('INSPIRE', "LIVE Day of Active Event")

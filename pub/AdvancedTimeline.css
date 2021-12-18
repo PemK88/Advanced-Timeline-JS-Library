@@ -533,7 +533,7 @@
 
 .horizontal-advanced-timeline .wrapper-point {
     --box-shadow-color: #283574;
-    box-shadow: 100px 0.5px 0px -17.5px var(--box-shadow-color);
+    box-shadow: 100px -1px 0px -18px var(--box-shadow-color);
     height: 43px;
     width: 136px;
     display: flex;
