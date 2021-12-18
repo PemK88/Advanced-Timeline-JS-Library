@@ -127,7 +127,7 @@ const [startPoint5, endPoint5] = timeline11.makeTimeline('#example8', false, 'wh
 const subPoint3 = timeline11.makeSubPoint(startPoint5, "Point 1", "Point 1 Information")
 
 //Create a regular video element
-timeline11.addVideoElementToSubPoint(subPoint3, '../Timeline.mp4')
+timeline11.addVideoElementToSubPoint(subPoint3, '../TimelineExample.mp4')
 
 //Style a video element
 const style3 = {
@@ -136,12 +136,12 @@ const style3 = {
     'border': '1px solid orangered'
 }
 
-timeline11.addVideoElementToSubPoint(subPoint3, '../Timeline.mp4', false, '', '', '', '', style3)
+timeline11.addVideoElementToSubPoint(subPoint3, '../TimelineExample.mp4', false, '', '', '', '', style3)
 
 //Add video from a different webpage (ex.youtube)
 timeline11.addVideoElementToSubPoint(subPoint3, 'https://www.youtube.com/embed/rTIAcCUaYsw', true, '', '', '', '')
 
 //Position a video element
-timeline11.addVideoElementToSubPoint(subPoint3, '../Timeline.mp4', false, '', 180, '', 30)
+timeline11.addVideoElementToSubPoint(subPoint3, '../TimelineExample.mp4', false, '', 180, '', 30)
 
 
