@@ -95,6 +95,7 @@ body{
 pre code {
     display: block;
     padding: 20px;
+    font-size: 16px;
     color: whitesmoke;
 }
 
@@ -145,4 +146,56 @@ pre code {
     border: 1.5px solid #c2c1c1;
     overflow: hidden;
     margin-bottom: 40px;
+}
+
+.step-title {
+    font-family: 'Saira', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 54px;
+    color: #000000;
+    margin-left: 40px;
+    margin-top: 25px;
+}
+
+.step {
+    font-family: 'Saira', sans-serif;
+    font-style: normal;
+    font-weight: 450;
+    font-size: 19px;
+    line-height: 41px;
+    display: flex;
+    align-items: flex-start;
+    color: #000000;
+    margin-left: 40px;
+    flex-direction: column;
+}
+
+.step p {
+    margin: 0;
+}
+
+.code-box {
+    background: #2F3653;
+    width: 93%;
+    border: 1px solid #5f5f5f;
+    margin-left: 40px;
+    overflow: auto;
+}
+
+.btn {
+    background-color: #725cf2;
+    border: none;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 17px;
+    border-radius: 10px;
+    margin-left: 10px;
+    text-decoration: none;
+}
+  
+.btn:hover {
+    background-color: #5b48c2;
 }
