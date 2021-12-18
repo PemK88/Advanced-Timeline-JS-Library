@@ -27,7 +27,7 @@
             <div class='page-title' style="margin-bottom: 10px;">Getting Started</div>
             <div class='example-title'>A quick overview of how to use the Advanced Timeline Library</div>
             
-            <div class='step-title'>Step 1: Install jQuery</div>
+            <div class='step-title'><span style="color: black;">Step 1:</span> Install jQuery</div>
             <div class='step'><p>This library requires the external library jQuery to function. You can install it using the instructions on their webpage (<span><a href='https://jquery.com/download/' target="_blank">Install jQuery</a></span>)
                  or you can include the script in your html file using the code below.</p>
             </div>
@@ -35,7 +35,7 @@
                 <code>&lt;script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"&gt;&lt;/script&gt;</code>
             </pre>
 
-            <div class='step-title'>Step 2: Install the Advanced Timeline Library</div>
+            <div class='step-title'><span style="color: black;">Step 2:</span> Install the Advanced Timeline Library</div>
             <div class='step'>
                 <p>Click the following button to download the library's css and javascript files <span><a class="btn" href="AdvancedTimeline.zip" download><i class="fa fa-download"></i>Download</a></span></p>
                 <p>Include the css file in your html file using the code below</p>
@@ -47,7 +47,69 @@
                 <p>Include the javascript file in your html file using the code below</p>
             </div>
             <pre class="code-box">
-                <code>&lt;script defer type="text/javascript" src="js/AdvancedTimeline.js"&gt;&lt;/script&gt;</code>
+                <code>&lt;script defer type="text/javascript" src="AdvancedTimeline.js"&gt;&lt;/script&gt;</code>
+            </pre>
+
+            <div class='step-title'><span style="color: black;">Step 3:</span> Intialize an Advanced Timeline</div>
+            <div class='step'>
+                <p>Create a javascript file and include the script in your html file using the code below</p>
+            </div>
+            <pre class="code-box">
+                <code>&lt;script defer type="text/javascript" src="example.js"&gt;&lt;/script&gt;</code>
+            </pre>
+            <div class='step'>
+                <p>Call the constructor function to create an AdvancedTimeline object</p>
+            </div>
+            <pre class="code-box">
+                <code>const timeline = new AdvancedTimeline();</code>
+            </pre>
+
+            <div class='step-title'><span style="color: black;">Step 4:</span> Create a Timeline</div>
+            <div class='step'>
+                <p>Use the makeTimeline method to create a timeline. 
+                    Provide the id of the DOM element in which you would like to create the timeline as the first parameter. Specify the value of the starting and ending points. 
+                </p>
+                <div style="width: 100%; height: 10px;"></div>
+                <p>
+                    Optionally, you can specify a description of these points.
+                    This function returns the id of the starting and ending points.
+                </p>
+            </div>
+            <pre class="code-box">
+                <code>const [startPoint, endPoint] = timeline.makeTimeline('#example1', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint')</code>
+            </pre>
+
+            <div class='step-title'><span style="color: black;">Step 5:</span> Create a Point</div>
+            <div class='step'>
+                <p>Use the makeNewPoint method to create a point. 
+                    Provide the value of the point as the first parameter. Optionally, you can specify a description of the point.
+                    This function returns the point's id.
+                </p>
+            </div>
+            <pre class="code-box">
+                <code>const middlePoint = timeline.makeNewPoint("Middle", 'Middle Point')</code>
+            </pre>
+
+            <div class='step-title'><span style="color: black;">Step 6:</span> Create a Subpoint</div>
+            <div class='step'>
+                <p>Use the makeSubPoint method to create a subpoint for a point. 
+                    Provide the id of the point in which you would like to create the sub point as the first parameter. Specify the value of the subpoint and optionally a description for it.
+                    This function returns the subpoint's id.
+                </p>
+            </div>
+            <pre class="code-box">
+                <code>const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information")</code>
+            </pre>
+
+            <div class='step-title'><span style="color: black;">Step 7: </span>Add Text to a Subpoint's Information Card</div>
+            <div class='step'>
+                <p>Use the addTextElementToSubPoint method to add text to the subPoint's information card. 
+                    Provide the id of the subpoint in which you would like to add the text as the first parameter. Specify the value of the text.
+                    You can also add images, audio, and video elements.
+                </p>
+            </div>
+            <pre class="code-box">
+                <code>timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint')</code>
             </pre>
 
             

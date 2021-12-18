@@ -154,9 +154,9 @@ pre code {
     font-weight: 600;
     font-size: 22px;
     line-height: 54px;
-    color: #000000;
+    color: #4022ee;
     margin-left: 40px;
-    margin-top: 25px;
+    margin-top: 40px;
 }
 
 .step {
@@ -170,6 +170,7 @@ pre code {
     color: #000000;
     margin-left: 40px;
     flex-direction: column;
+    width: 93%;
 }
 
 .step p {
