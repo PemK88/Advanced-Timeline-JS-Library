@@ -479,6 +479,9 @@
 
         if((typeof startDivisionStyle === 'object') && (Object.keys(startDivisionStyle).length !== 0)) {
             $(`#${timelineId} #${divisionId}`).css(startDivisionStyle)
+            if(self.horizontal && startDivisionStyle['background-color']){
+                $(`#${timelineId} #wrapper-${startPointId} `).css({'--box-shadow-color' : startDivisionStyle['background-color']})
+            }
         }
 
         if((typeof endPointStyle === 'object') && (Object.keys(endPointStyle).length !== 0)) {
@@ -494,6 +497,9 @@
         }
         if((typeof divisionStyle === 'object') && (Object.keys(divisionStyle).length !== 0)) {
             $(`#${self.timeline.id} #${divisionID} `).css(divisionStyle);
+            if(self.horizontal && divisionStyle['background-color']){
+                $(`#${self.timeline.id} #wrapper-${pointID} `).css({'--box-shadow-color' : divisionStyle['background-color']})
+            }
         }
     }
 
@@ -679,6 +685,21 @@
             audio.currentTime = 0;
         })
 
+        const videos = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('video')
+        
+        videos.forEach((video,i) => {
+            video.pause();
+            video.currentTime = 0;
+        })
+
+        const iframes = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('iframe')
+        
+        iframes.forEach((iframe,i) => {
+
+            let iframeSrc = iframe.src;
+            iframe.src = iframeSrc
+        })
+
         $(`#${self.timeline.id} #${id} .info-textbox .audio-icon-triangle`).css({'border-right-color': ''})
         $(`#${self.timeline.id} #${id} .info-textbox  .audio-icon-square`).css({'background': ''})
             
@@ -714,6 +735,21 @@
         audios.forEach((audio,i) => {
             audio.pause();
             audio.currentTime = 0;
+        })
+
+        const videos = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('video')
+        
+        videos.forEach((video,i) => {
+            video.pause();
+            video.currentTime = 0;
+        })
+
+        const iframes = self.timelineElement.querySelector(`#${id}`).querySelector('.info-textbox').querySelectorAll('iframe')
+        
+        iframes.forEach((iframe,i) => {
+
+            let iframeSrc = iframe.src;
+            iframe.src = iframeSrc
         })
 
         $(`#${self.timeline.id} #${id} .info-textbox .audio-icon-triangle`).css({'border-right-color': ''})

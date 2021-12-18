@@ -532,21 +532,22 @@
 }
 
 .horizontal-advanced-timeline .wrapper-point {
-    box-shadow: 100px 0.5px 0px -17.5px #283574;
+    --box-shadow-color: #283574;
+    box-shadow: 100px 0.5px 0px -17.5px var(--box-shadow-color);
     height: 43px;
     width: 136px;
     display: flex;
     flex-direction: column;
     overflow: visible;
     transform-origin: center;
-    transition: transform 0.1s ease, 0.5s ease, opacity 0.2s ease;
+    transition: transform 0.1s ease, 0.45s ease, opacity 0.2s ease;
 }
 
 .horizontal-advanced-timeline .wrapper-point-visible {
     display: block;
     transform: scale(1.2);
     pointer-events: none;
-    box-shadow: 100px 3px 0px -16px #283574;
+    box-shadow: 100px 3px 0px -16px var(--box-shadow-color);
 }
 
 .horizontal-advanced-timeline .overlay {
