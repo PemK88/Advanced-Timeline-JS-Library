@@ -50,7 +50,7 @@
                 <code>&lt;script defer type="text/javascript" src="AdvancedTimeline.js"&gt;&lt;/script&gt;</code>
             </pre>
 
-            <div class='step-title'><span style="color: black;">Step 3:</span> Intialize an Advanced Timeline</div>
+            <div class='step-title'><span style="color: black;">Step 3:</span> Initialize an Advanced Timeline</div>
             <div class='step'>
                 <p>Create a javascript file and include the script in your html file using the code below</p>
             </div>
@@ -112,7 +112,628 @@
                 <code>timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint')</code>
             </pre>
 
-            
+
+            <div class='page-title' style="margin-bottom: 10px; margin-top: 80px;">API Methods</div>
+
+            <div class='example-title' style="font-size: 30px;">AdvancedTimeline()</div>
+
+            <div class='step'>
+                <p>The advanced timeline constructor. It returns an <span style="color: #4022ee;">AdvancedTimeline</span> Object.</p>
+            </div>
+
+            <div class='example-title' style="font-size: 20px;line-height: 0px;margin-top: 18px;margin-bottom: 12px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span> Object Properties</p>
+            </div>
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Property</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">activeSubDivion</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the subDivision DOM element that is currently zoomed in
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">horizontal</td>
+                    <td class='properties-cell'>false</td>
+                    <td class='properties-cell'>Boolean</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        When this value is true the timeline is be horizontal. If false it is vertical
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointEndElement</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                       The DOM element of the last point in the timeline
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointEndElement</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                       The DOM element of the last point in the timeline
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">timeline</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                       A javascript object that holds the points, subdivisions, and background colour that are displayed in the browser
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">timelineElement</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                       The DOM element of the timeline
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">timelineWrapperElement</td>
+                    <td class='properties-cell'>null</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                       The parent DOM element of the timeline 
+                    </td>
+                </tr>
+            </table>
+
+            <div class='step-title' style="color: #825dc6;"><span style="color: #4322ff;">Note: </span>Styling the Timeline</div>
+            <div class='step'>
+                <p>The functions below all have a parameter that allows you to style the timeline's elements.
+                    The parameter is an object of css properties to be applied to the specified element. This object should be formatted as seen in the code below.
+                    Changing the height and width properties of points and subdivisons is not recommeded as
+                     this may conflict with the calculations used for zooming in and out of subdivisions.
+                    
+                </p>
+            </div>
+            <pre class="code-box">
+                <code>const style = {
+    'color': 'blue',
+    'font-size': '15px'
+};</code>
+            </pre>
+            <div class='step'>
+                <p>Some elements have a box-shadow property on hover. The colour of this can be changed by including the variable below in the style object</p>
+            </div>
+            <pre class="code-box">
+                <code>const style = {
+    '--box-shadow-color': '#29d198'
+};</code>
+            </pre>
+            <div class='step'>
+                <p>To remove an existing css property, add it to the style object with an empty value</p>
+            </div>
+            <pre class="code-box" style="margin-bottom: 40px;">
+                <code>const style = {
+    'color': '',
+    'font-size': ''
+};</code>
+            </pre>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.makeTimeline()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Creates a timeline element in the DOM with a starting point, the starting point's subdivision, and an ending point. Ending points do not have a subdivision. It returns the ids of the starting and ending point DOM elements.</p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">domElement</td>
+                    <td class='properties-cell'>'body'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the DOM element in which the timeline element should be added to
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">horizontal</td>
+                    <td class='properties-cell'>false</td>
+                    <td class='properties-cell'>Boolean</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        If this value is true the timeline will be horizontal. If false it will be vertical
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">backgroundColor</td>
+                    <td class='properties-cell'>'white'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The background colour of the timeline. Can be specified in  css' accepted color formats (HEX, RGB, etc.)
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startTitle</td>
+                    <td class='properties-cell'>'Start'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The value of the timeline's starting point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">endTitle</td>
+                    <td class='properties-cell'>'End'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The value of the timeline's ending point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startInfo</td>
+                    <td class='properties-cell'>'N/A'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The description of the timeline's starting point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">endInfo</td>
+                    <td class='properties-cell'>'N/A'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The description of the timeline's ending point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startPointStyle</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the starting point</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startDivisionStyle</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the starting subdivision</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startPointStyle</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the ending point</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.makeNewPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Creates a point and subdivision element in the DOM. It returns the id of the point element in the DOM.</p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointTitle</td>
+                    <td class='properties-cell'>'Point'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The value of the point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">info</td>
+                    <td class='properties-cell'>'No Information'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The description of the point
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointStyle</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the point</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">divisionStyle</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the point's subdivision</p>
+                    </td>
+                </tr>
+            </table>
+
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.makeSubPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Creates a subpoint element in a subdivision element in the DOM. It returns the id of the subpoint element in the DOM.
+                    <span style="color: #4322ff;">Note: </span>subpoints cannot be added to the ending point in 
+                    the timeline as it does not have a subdivision.
+           
+                </p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointId<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the point to create the subpoint for
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">frontInfo</td>
+                    <td class='properties-cell'>'Click to see more information'</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The description on the front of the subpoint's information card
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">backHeader</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The header on the back of the subpoint's information card
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">style</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the subpoint</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.addTextElementToSubPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Adds a text element to a subpoint's information card in the DOM. It does not have a return value.
+                </p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">subPointId<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the subpoint to add the text element to
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">text</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The text to be displayed in the DOM
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">top</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The top position of the text element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">left</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The left position of the text element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">right</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The right position of the text element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">bottom</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The bottom position of the text element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">styles</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the text element</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.addImageElementToSubPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Adds an image element to a subpoint's information card in the DOM. It does not have a return value.
+                </p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">subPointId<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the subpoint to add the image element to
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">imageSrc<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The path to the image
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">top</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The top position of the image element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">left</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The left position of the image element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">right</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The right position of the image element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">bottom</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The bottom position of the image element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">styles</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the image element</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.addAudioToSubPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Adds an audio element to a subpoint's information card in the DOM. It does not have a return value.
+                </p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">subPointId<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the subpoint to add the audio element to
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">audioSrc<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The path to the audio file. Only mp3 files are accepted
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">audioTitle</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The value of the audio's label
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">top</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The top position of the audio element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">left</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The left position of the audio element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">right</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The right position of the audio element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">bottom</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The bottom position of the audio element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">styles</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the audio element's label</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class='example-title' style="font-size: 30px;">
+                <p><span style="color: #4022ee;">AdvancedTimeline</span>.addVideoElementToSubPoint()</p>
+            </div>
+
+            <div class='step' style='margin-bottom: 12px;'>
+                <p>Adds a video element to a subpoint's information card in the DOM. It does not have a return value.
+                </p>
+            </div>
+
+            <table class='properties-table' cellspacing='0'>
+                <tr>
+                    <th class='header'>Parameter</th>
+                    <th class='header'>Default</th>
+                    <th class='header'>Type</th>
+                    <th class='header' style="width: 55%;">Description</th>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">subPointId<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The id of the subpoint to add the video element to
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">videoSrc<span style="font-size: 11px;color: gray;display: block;">(required)</span></td>
+                    <td class='properties-cell'>-</td>
+                    <td class='properties-cell'>String</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The path to the video. Only mp4 files or links to videos on external webpages are accepted
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">webpageSrc</td>
+                    <td class='properties-cell'>false</td>
+                    <td class='properties-cell'>Boolean</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        If the videoSrc parameter is a link to a video on an external source then this should be true. 
+                        If the videoSrc parameter is an internal path then it should be false
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">top</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The top position of the video element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">left</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The left position of the video element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">right</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The right position of the video element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">bottom</td>
+                    <td class='properties-cell'>''</td>
+                    <td class='properties-cell'>Number</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        The bottom position of the video element in pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">styles</td>
+                    <td class='properties-cell'>{}</td>
+                    <td class='properties-cell'>Object</td>
+                    <td class='properties-cell' style="width: 55%;">
+                        <p>An object of css properties to be applied to the video element</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </body>

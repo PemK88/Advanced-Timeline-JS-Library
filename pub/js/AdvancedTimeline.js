@@ -227,7 +227,7 @@
         return [subDivision, subDivisionHtml];
     }
 
-    function createAudioelement(subPointId, audioSrc, audioTitle="", top='', left='', right='', bottom='', styles={}) {
+    function createAudioelement(subPointId=null, audioSrc=null, audioTitle="", top='', left='', right='', bottom='', styles={}) {
         if(!audioSrc || !subPointId){
             return;
         }
@@ -265,7 +265,7 @@
 
     }
 
-    function createTextElement(subPointId, text='', top='', left='', right='', bottom='', styles={}) {
+    function createTextElement(subPointId=null, text='', top='', left='', right='', bottom='', styles={}) {
         if(!subPointId){
             return;
         }
@@ -304,7 +304,7 @@
 
     }
 
-    function createImageElement(subPointId, imageSrc, top='', left='', right='', bottom='', styles={}) {
+    function createImageElement(subPointId=null, imageSrc=null, top='', left='', right='', bottom='', styles={}) {
         if(!imageSrc || !subPointId){
             return;
         }
@@ -344,7 +344,7 @@
 
     }
 
-    function createVideoElement(subPointId, videoSrc, webpageSrc=false, top='', left='', right='', bottom='', styles={}) {
+    function createVideoElement(subPointId=null, videoSrc=null, webpageSrc=false, top='', left='', right='', bottom='', styles={}) {
         if(!videoSrc || !subPointId){
             return;
         }

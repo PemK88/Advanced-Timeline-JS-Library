@@ -63,12 +63,12 @@ timeline.makeNewPoint("Middle", 'Middle Point');
 
 const [startPoint, endPoint] = timeline.makeTimeline('#example3', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
 
-timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information");
 timeline.makeSubPoint(startPoint, "Point 2", "Point 2 Information");
 
 const middlePoint = timeline.makeNewPoint("Middle", 'Middle Point');
 
-timeline.makeSubPoint(middlePoint, "Point 1", "Point 1 Information");
+timeline.makeSubPoint(middlePoint, "Point 1 (Click Me)", "Point 1 Information");
                         </code>
                       </pre>
                 </div>
@@ -100,12 +100,12 @@ const subStyle = {
 
 const [startPoint, endPoint1] = timeline.makeTimeline('#example4', false, 'rgb(64 72 105)',  "Start", "End", 'Starting Point', 'EndPoint', pointStyle, subDivisionStyle, pointStyle);
 
-timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information", subStyle);
+timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information", subStyle);
 timeline.makeSubPoint(startPoint, "Point 2", "Point 2 Information", subStyle);
 
 const middlePoint = timeline.makeNewPoint("Middle", 'Middle Point', pointStyle, subDivisionStyle);
 
-timeline.makeSubPoint(middlePoint, "Point 1", "Point 1 Information", subStyle);
+timeline.makeSubPoint(middlePoint, "Point 1 (Click Me)", "Point 1 Information", subStyle);
                         </code>
                       </pre>
                 </div>
@@ -121,7 +121,7 @@ timeline.makeSubPoint(middlePoint, "Point 1", "Point 1 Information", subStyle);
 
 const [startPoint, endPoint] = timeline.makeTimeline('#example5', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
 
-const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information");
 
 //Create a regular text element
 timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint');
@@ -151,7 +151,7 @@ timeline.addTextElementToSubPoint(subPoint, 'This is the first subpoint', 50, 20
 
 const [startPoint, endPoint] = timeline.makeTimeline('#example6', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
 
-const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information");
 
 //Create a regular image element
 timeline.addImageElementToSubPoint(subPoint, 'timeline.png');
@@ -183,7 +183,7 @@ timeline.addImageElementToSubPoint(subPoint, 'timeline.png','', 40, '', 0);
 
 const [startPoint, endPoint] = timeline.makeTimeline('#example7', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
 
-const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information");
 
 //Create a regular audio element
 timeline.addAudioToSubPoint(subPoint, 'piano_cover.mp3', 'Piano Cover');
@@ -213,7 +213,7 @@ timeline.addAudioToSubPoint(subPoint, 'piano_cover.mp3', 'Piano Cover', '', '', 
 
 const [startPoint, endPoint] = timeline.makeTimeline('#example8', false, 'white',  "Start", "End", 'Starting Point', 'EndPoint');
 
-const subPoint = timeline.makeSubPoint(startPoint, "Point 1", "Point 1 Information");
+const subPoint = timeline.makeSubPoint(startPoint, "Point 1 (Click Me)", "Point 1 Information");
 
 //Create a regular video element
 timeline.addVideoElementToSubPoint(subPoint, 'Timeline.mp4');

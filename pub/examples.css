@@ -200,3 +200,35 @@ pre code {
 .btn:hover {
     background-color: #5b48c2;
 }
+
+.header {
+    font-family: 'Saira', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 57px;
+    text-align: left;
+    border: none;
+    background-color: #715CF1;
+    padding: 0px 40px;
+    color: white;
+    width: 15%;
+}
+
+.properties-table{
+    margin-left: 40px;
+    width: 93%;
+    margin-bottom: 40px;
+}
+
+.properties-cell {
+    font-family: 'Saira', sans-serif;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 18px;
+    text-align: left;
+    border: none;
+    padding: 15px 40px;
+    width: 15%;
+    background: #f4f4f4;
+}
