@@ -24,7 +24,7 @@ timeline6.makeSubPoint(startPoint, "Point 2", "Point 2 Information")
 const middlePoint = timeline6.makeNewPoint("Middle", 'Middle Point')
 timeline6.makeSubPoint(middlePoint, "Point 1 (Click Me)", "Point 1 Information")
 
-//style timeline 
+//styled timeline 
 const timeline8 = new AdvancedTimeline();
 
 const pointStyle = {

@@ -20,7 +20,7 @@
         <ul class='navbar'>
             <li class='nav-title' style="margin-right: auto;">Advanced Timeline</li>
             <li><a class="nav-link" href="landingPage.html">Home</a></li>
-            <li><a class="nav-link" href="timelineExample.html">Examples</a></li>
+            <li><a class="nav-link" href="example.html">Examples</a></li>
             <li><a class="nav-link" href="documentation.html">Documentation</a></li>
         </ul>
         <div>
@@ -67,7 +67,7 @@
             <div class='step-title'><span style="color: black;">Step 4:</span> Create a Timeline</div>
             <div class='step'>
                 <p>Use the makeTimeline method to create a timeline. 
-                    Provide the id of the DOM element in which you would like to create the timeline as the first parameter. Specify the value of the starting and ending points. 
+                    Provide the id of the Document Object Model (DOM) element in which you would like to create the timeline as the first parameter. Specify the value of the starting and ending points. 
                 </p>
                 <div style="width: 100%; height: 10px;"></div>
                 <p>
@@ -144,15 +144,7 @@
                     <td class='properties-cell'>false</td>
                     <td class='properties-cell'>Boolean</td>
                     <td class='properties-cell' style="width: 55%;">
-                        When this value is true the timeline is be horizontal. If false it is vertical
-                    </td>
-                </tr>
-                <tr>
-                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">pointEndElement</td>
-                    <td class='properties-cell'>null</td>
-                    <td class='properties-cell'>Object</td>
-                    <td class='properties-cell' style="width: 55%;">
-                       The DOM element of the last point in the timeline
+                        When this value is true the timeline is horizontal. If false it is vertical
                     </td>
                 </tr>
                 <tr>
@@ -205,7 +197,7 @@
 };</code>
             </pre>
             <div class='step'>
-                <p>Some elements have a box-shadow property on hover. The colour of this can be changed by including the variable below in the style object</p>
+                <p>Some elements have a box-shadow property on hover. The colour of this can be changed by including the variable '--box-shadow-color' in the style object.</p>
             </div>
             <pre class="code-box">
                 <code>const style = {
@@ -213,7 +205,7 @@
 };</code>
             </pre>
             <div class='step'>
-                <p>To remove an existing css property, add it to the style object with an empty value</p>
+                <p>To remove an existing css property, add it to the style object with an empty string.</p>
             </div>
             <pre class="code-box" style="margin-bottom: 40px;">
                 <code>const style = {
@@ -227,7 +219,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Creates a timeline element in the DOM with a starting point, the starting point's subdivision, and an ending point. Ending points do not have a subdivision. It returns the ids of the starting and ending point DOM elements.</p>
+                <p>Creates a timeline element in the DOM with a starting point, the starting point's subdivision, and an ending point. Ending points do not have a subdivision. It returns the ids of the starting and ending points' DOM elements.</p>
             </div>
 
             <table class='properties-table' cellspacing='0'>
@@ -310,7 +302,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">startPointStyle</td>
+                    <td class='properties-cell' style="color: #5e45ee;font-weight: 600;">endPointStyle</td>
                     <td class='properties-cell'>{}</td>
                     <td class='properties-cell'>Object</td>
                     <td class='properties-cell' style="width: 55%;">
@@ -324,7 +316,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Creates a point and subdivision element in the DOM. It returns the id of the point element in the DOM.</p>
+                <p>Creates a point element in the DOM. It returns the id of the point's DOM element.</p>
             </div>
 
             <table class='properties-table' cellspacing='0'>
@@ -374,7 +366,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Creates a subpoint element in a subdivision element in the DOM. It returns the id of the subpoint element in the DOM.
+                <p>Creates a subpoint element in a point's subdivision DOM element. It returns the id of the subpoint's DOM element.
                     <span style="color: #4322ff;">Note: </span>subpoints cannot be added to the ending point in 
                     the timeline as it does not have a subdivision.
            
@@ -427,7 +419,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Adds a text element to a subpoint's information card in the DOM. It does not have a return value.
+                <p>Adds a text element to a subpoint's information card. It does not have a return value.
                 </p>
             </div>
 
@@ -451,7 +443,7 @@
                     <td class='properties-cell'>''</td>
                     <td class='properties-cell'>String</td>
                     <td class='properties-cell' style="width: 55%;">
-                        The text to be displayed in the DOM
+                        The text to be displayed
                     </td>
                 </tr>
                 <tr>
@@ -501,7 +493,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Adds an image element to a subpoint's information card in the DOM. It does not have a return value.
+                <p>Adds an image element to a subpoint's information card. It does not have a return value.
                 </p>
             </div>
 
@@ -575,7 +567,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Adds an audio element to a subpoint's information card in the DOM. It does not have a return value.
+                <p>Adds an audio element to a subpoint's information card. It does not have a return value.
                 </p>
             </div>
 
@@ -657,7 +649,7 @@
             </div>
 
             <div class='step' style='margin-bottom: 12px;'>
-                <p>Adds a video element to a subpoint's information card in the DOM. It does not have a return value.
+                <p>Adds a video element to a subpoint's information card. It does not have a return value.
                 </p>
             </div>
 
@@ -689,7 +681,7 @@
                     <td class='properties-cell'>false</td>
                     <td class='properties-cell'>Boolean</td>
                     <td class='properties-cell' style="width: 55%;">
-                        If the videoSrc parameter is a link to a video on an external source then this should be true. 
+                        If the videoSrc parameter is a link to a video on an external webpage, such as youtube, then this should be true. 
                         If the videoSrc parameter is an internal path then it should be false
                     </td>
                 </tr>

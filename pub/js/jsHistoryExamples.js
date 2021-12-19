@@ -1,5 +1,3 @@
-//document.head.insertAdjacentHTML('beforeend', "<link rel='stylesheet' type='text/css' href='AdvancedTimeline.css'>");
-
 const timeline2 = new AdvancedTimeline();
 
 const [point95, pointEnd] = timeline2.makeTimeline('#container2', true, '#2f3653',  "1995", "2018", 'Javascript Invention', 'ES2018', {'background-color': '#0bbb80', '--box-shadow-color': '#29d198'}, {'background-color': '#0bbb80', '--box-shadow-color': '#29d198'}, {'background-color': '#0bbb80', '--box-shadow-color': '#29d198'})
@@ -13,10 +11,6 @@ timeline2.addTextElementToSubPoint(point95P1, text, '', '', '', '', {'font-weigh
 timeline2.makeSubPoint(point95, "Netscape's Response", "The Introduction of Internet Explorer", {'background-color': 'rgb(11, 187, 128)', '--box-shadow-color': '#29d198', 'border-color': '#139113'});
 timeline2.makeSubPoint(point95, "Sun Microsystems and Netscape Collaboration", "The Introduction of Internet Explorer", {'background-color': 'rgb(11, 187, 128)', '--box-shadow-color': '#29d198', 'border-color': '#139113'});
 timeline2.makeSubPoint(point95, "Javascript Is Born", "The Introduction of Internet Explorer", {'background-color': 'rgb(11, 187, 128)', '--box-shadow-color': '#29d198', 'border-color': '#139113'});
-
-// document.getElementsByClassName('create-timeline2')[0].addEventListener('click', () => {timeline2.makeTimeline.bind(timeline2)('#container2', false)});
-// document.querySelector('.create-point2').addEventListener('click', timeline2.makeNewPoint.bind(timeline2));
-// document.querySelector('.create-sub-point2').addEventListener('click', timeline2.makeSubPoint.bind(timeline2));
 
 const timeline3 = new AdvancedTimeline();
 timeline3.makeTimeline('#container3', false)
